@@ -1,0 +1,507 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-sans);font-size:13px}
+.wrap{padding:1rem 0 2rem}
+.header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;flex-wrap:wrap;gap:8px}
+.legend{display:flex;gap:12px;flex-wrap:wrap}
+.leg{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--color-text-secondary)}
+.leg-box{width:28px;height:9px;border-radius:2px}
+.year-tabs{display:flex;gap:4px}
+.ytab{font-size:11px;padding:3px 10px;border:0.5px solid var(--color-border-secondary);border-radius:12px;background:var(--color-background-primary);color:var(--color-text-secondary);cursor:pointer}
+.ytab.on{background:var(--color-text-primary);color:var(--color-background-primary);border-color:var(--color-text-primary)}
+.scroll-wrap{overflow-x:auto;padding-bottom:4px}
+.grid{position:relative;min-width:900px}
+.timeline-head{display:flex;margin-bottom:2px}
+.thl-spacer{flex:0 0 188px}
+.thl-years{flex:1;display:flex}
+.year-block{display:flex;flex-direction:column;border-left:0.5px solid var(--color-border-tertiary)}
+.year-label{font-size:10px;font-weight:500;color:var(--color-text-tertiary);padding:0 6px 2px;letter-spacing:.05em}
+.months-row{display:flex}
+.ml{font-size:9px;color:var(--color-text-tertiary);width:var(--mw);text-align:center;flex-shrink:0}
+.ml.now{color:var(--color-text-info);font-weight:500}
+.now-line{position:absolute;top:0;bottom:0;width:1.5px;background:var(--color-border-info);opacity:.5;pointer-events:none;z-index:10}
+.group-header{font-size:10px;font-weight:500;letter-spacing:.06em;color:var(--color-text-tertiary);background:var(--color-background-tertiary);padding:4px 8px;margin:8px 0 2px;border-radius:3px}
+.proj-row{display:flex;align-items:center;margin-bottom:3px;position:relative}
+.proj-row:hover .proj-label-cell{background:var(--color-background-secondary)}
+.proj-row:hover .proj-bars-cell{background:color-mix(in srgb,var(--color-background-secondary) 40%,transparent)}
+.proj-label-cell{flex:0 0 188px;padding:4px 8px;cursor:pointer;border-radius:3px 0 0 3px;transition:background .1s}
+.proj-title{font-size:12px;color:var(--color-text-primary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:172px}
+.proj-sub{font-size:10px;color:var(--color-text-tertiary);margin-top:1px;display:flex;align-items:center;gap:4px}
+.region-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.proj-bars-cell{flex:1;position:relative;height:36px;border-radius:0 3px 3px 0;transition:background .1s}
+.bar{position:absolute;height:14px;top:4px;border-radius:2px;display:flex;align-items:center;overflow:hidden;cursor:pointer;transition:opacity .15s}
+.bar:hover{opacity:.82}
+.bar-label{font-size:9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:0 5px;font-weight:500}
+.bar-dot{position:absolute;height:14px;top:22px;border-radius:2px;display:flex;align-items:center;overflow:hidden}
+.dot-label{font-size:9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:0 5px}
+.tooltip{position:fixed;background:var(--color-background-primary);border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);padding:10px 14px;max-width:280px;font-size:12px;box-shadow:0 4px 16px rgba(0,0,0,.12);z-index:100;pointer-events:none;display:none}
+.tt-title{font-weight:500;font-size:13px;color:var(--color-text-primary);margin-bottom:4px}
+.tt-row{display:flex;gap:6px;margin-top:3px;color:var(--color-text-secondary)}
+.tt-label{color:var(--color-text-tertiary);flex-shrink:0}
+.detail-panel{margin-top:4px;padding:10px 12px;border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-tertiary);background:var(--color-background-secondary);display:none}
+.detail-panel.open{display:block}
+.dp-title{font-size:13px;font-weight:500;color:var(--color-text-primary);margin-bottom:8px}
+.dp-tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
+.dp-tag{font-size:11px;padding:2px 9px;border-radius:10px;font-weight:500}
+.dp-row{font-size:12px;color:var(--color-text-secondary);margin-bottom:4px;display:flex;gap:8px}
+.dp-key{color:var(--color-text-tertiary);flex-shrink:0;min-width:60px}
+.dp-actions{margin-top:8px;padding-top:8px;border-top:0.5px solid var(--color-border-tertiary)}
+.dp-act-title{font-size:11px;font-weight:500;color:var(--color-text-tertiary);margin-bottom:4px}
+.dp-act-item{font-size:11px;color:var(--color-text-secondary);margin-bottom:3px;padding-left:10px;position:relative}
+.dp-act-item::before{content:"→";position:absolute;left:0;color:var(--color-text-tertiary)}
+.certainty-bar{height:3px;border-radius:2px;margin-top:6px;background:var(--color-border-tertiary)}
+.certainty-fill{height:100%;border-radius:2px}
+</style>
+
+<div class="wrap">
+
+<div class="header">
+  <div class="legend">
+    <div class="leg"><div class="leg-box" style="background:#378ADD"></div>개발 / 집필</div>
+    <div class="leg"><div class="leg-box" style="background:#BA7517"></div>피칭</div>
+    <div class="leg"><div class="leg-box" style="background:#639922"></div>제작 확정 → 제작</div>
+    <div class="leg"><div class="leg-box" style="background:#9B4DCA"></div>방영 / 개봉</div>
+    <div class="leg"><div class="leg-box" style="background:#888780;opacity:.5"></div>불확실 구간</div>
+  </div>
+</div>
+
+<div class="scroll-wrap">
+<div class="grid" id="grid"></div>
+</div>
+
+<div class="detail-panel" id="detail"></div>
+</div>
+
+<div class="tooltip" id="tt"></div>
+
+<script>
+const MW = 22;
+document.documentElement.style.setProperty('--mw', MW+'px');
+
+const START_YEAR = 2026, START_MONTH = 1;
+const TOTAL_MONTHS = 48;
+const NOW_OFFSET = 3;
+
+function mo(year, month){ return (year-START_YEAR)*12 + (month-1); }
+function px(offset){ return offset * MW; }
+
+const PHASE_COLORS = {
+  dev:     {bg:'#378ADD', text:'#fff'},
+  pitch:   {bg:'#BA7517', text:'#fff'},
+  prod:    {bg:'#639922', text:'#fff'},
+  air:     {bg:'#9B4DCA', text:'#fff'},
+  hold:    {bg:'#888780', text:'#fff', opacity:.45},
+};
+
+const projects = [
+  {
+    group:'미국 — wiip 공동제작',
+    id:'p1', title:'힘쎈여자 도봉순', partner:'Wiip × Disney+', type:'공동제작', region:'미국',
+    certainty:70,
+    note:'Disney BA 조건 협상 마무리 임박. 편성 확정 후 스크립트+비주얼 덱 개발 → Greenlit.',
+    phases:[
+      {type:'dev',   s:mo(2026,1),  e:mo(2026,6),  label:'Disney 협상 / 편성 조건'},
+      {type:'dev',   s:mo(2026,6),  e:mo(2026,12), label:'스크립트 · 비주얼 덱'},
+      {type:'pitch', s:mo(2026,11), e:mo(2027,2),  label:'Greenlit 확정'},
+      {type:'prod',  s:mo(2027,3),  e:mo(2028,3),  label:'애니메이션 제작'},
+      {type:'air',   s:mo(2028,3),  e:mo(2028,5),  label:'Disney+ 방영', dot:true},
+    ],
+    milestones:[
+      {mo:mo(2026,4),  label:'Disney 최종 합의', color:'#BA7517'},
+      {mo:mo(2026,11), label:'Greenlit', color:'#639922'},
+      {mo:mo(2028,3),  label:'방영', color:'#9B4DCA'},
+    ],
+    actions:['4월 내 Disney 최종 조건 합의','편성 확정 즉시 개발 착수'],
+    issue:'바이어 1개사 → 신속 클로징 필요',
+  },
+  {
+    group:'미국 — wiip 공동제작',
+    id:'p2', title:'기상청사람들', partner:'Wiip', type:'공동제작', region:'미국',
+    certainty:50,
+    note:'작가 비용 이슈 해결이 전체 일정의 선결 조건. 해결 후 집필 ~12개월, 피칭 후 그린라이트까지 추가 6~12개월.',
+    phases:[
+      {type:'dev',   s:mo(2026,1),  e:mo(2026,7),  label:'작가 계약 협상'},
+      {type:'dev',   s:mo(2026,7),  e:mo(2027,7),  label:'스크립트 개발', uncertain:true},
+      {type:'pitch', s:mo(2027,7),  e:mo(2028,1),  label:'플랫폼 피칭', uncertain:true},
+      {type:'prod',  s:mo(2028,3),  e:mo(2029,3),  label:'제작', uncertain:true},
+      {type:'air',   s:mo(2029,3),  e:mo(2029,5),  label:'방영', dot:true, uncertain:true},
+    ],
+    milestones:[
+      {mo:mo(2026,7),  label:'작가 계약', color:'#378ADD'},
+      {mo:mo(2027,7),  label:'피칭 시작', color:'#BA7517'},
+      {mo:mo(2028,3),  label:'제작 확정', color:'#639922'},
+    ],
+    actions:['작가 계약 조건 Q2 합의','wiip 조율 후 집필 착수'],
+    issue:'작가 요구 수준 높음 → 계약 장기화 리스크',
+  },
+  {
+    group:'미국 — wiip 공동제작',
+    id:'p3', title:'몸값 (Bargain)', partner:'Wiip', type:'공동제작', region:'미국',
+    certainty:65,
+    note:'3고 완성 후 SXSW 수상 모멘텀 활용해 피칭. 영화이므로 제작~개봉 18~24개월 소요.',
+    phases:[
+      {type:'dev',   s:mo(2026,1),  e:mo(2026,6),  label:'스크립트 3고 / 프로듀서'},
+      {type:'pitch', s:mo(2026,6),  e:mo(2026,11), label:'플랫폼 피칭'},
+      {type:'prod',  s:mo(2027,1),  e:mo(2028,6),  label:'제작 → 후반작업', uncertain:true},
+      {type:'air',   s:mo(2028,6),  e:mo(2028,8),  label:'OTT 개봉', dot:true, uncertain:true},
+    ],
+    milestones:[
+      {mo:mo(2026,5),  label:'3고 완성', color:'#378ADD'},
+      {mo:mo(2026,11), label:'투자 확정', color:'#639922'},
+      {mo:mo(2028,6),  label:'개봉', color:'#9B4DCA'},
+    ],
+    actions:['3고 비용 집행 승인','Lorenzo Credit 합의','피칭 플랫폼 사전 준비'],
+    issue:'3고 비용 집행 내부 승인 필요',
+  },
+  {
+    group:'미국 — wiip 공동제작',
+    id:'p4', title:'괴물 (Beyond Evil)', partner:'Wiip', type:'공동제작', region:'미국',
+    certainty:45,
+    note:'인도 딜 제약사항 확인이 선결 조건. 해결 후 작가 서칭→집필→피칭 순서.',
+    phases:[
+      {type:'dev',   s:mo(2026,1),  e:mo(2026,5),  label:'인도 딜 확인 / 계약'},
+      {type:'dev',   s:mo(2026,5),  e:mo(2027,3),  label:'작가 서칭 · 집필', uncertain:true},
+      {type:'pitch', s:mo(2027,3),  e:mo(2027,9),  label:'플랫폼 피칭', uncertain:true},
+      {type:'prod',  s:mo(2028,1),  e:mo(2029,1),  label:'제작', uncertain:true},
+      {type:'air',   s:mo(2029,1),  e:mo(2029,3),  label:'방영', dot:true, uncertain:true},
+    ],
+    milestones:[
+      {mo:mo(2026,5),  label:'계약 체결', color:'#378ADD'},
+      {mo:mo(2027,3),  label:'피칭 시작', color:'#BA7517'},
+    ],
+    actions:['인도 딜 제약 확인 → wiip 전달 (4월 말)','타지역 판매 우선순위 결정'],
+    issue:'인도 Applause 딜 제약사항 미확인 → 블로킹',
+  },
+  {
+    group:'미국 — wiip 공동제작',
+    id:'p5', title:'재벌집 막내아들', partner:'Wiip (FX 유력)', type:'공동제작', region:'미국',
+    certainty:55,
+    note:'아컴 MOU 체결 후 작가 서칭 착수. wiip Mark팀: 대본+캐스팅 패키징 선호 → 피칭 전 충분한 패키징 필요.',
+    phases:[
+      {type:'dev',   s:mo(2026,1),  e:mo(2026,5),  label:'MOU / 계약 조율'},
+      {type:'dev',   s:mo(2026,5),  e:mo(2027,5),  label:'작가 서칭 · 파일럿 대본', uncertain:true},
+      {type:'pitch', s:mo(2027,5),  e:mo(2027,11), label:'패키징 피칭 (FX)', uncertain:true},
+      {type:'prod',  s:mo(2028,3),  e:mo(2029,3),  label:'제작', uncertain:true},
+      {type:'air',   s:mo(2029,3),  e:mo(2029,6),  label:'방영', dot:true, uncertain:true},
+    ],
+    milestones:[
+      {mo:mo(2026,4),  label:'MOU 체결', color:'#378ADD'},
+      {mo:mo(2027,5),  label:'피칭', color:'#BA7517'},
+    ],
+    actions:['아티스트컴퍼니 MOU 체결 (4월)','중·일 권리 범위 결정'],
+    issue:'중·일 권리 범위 아컴/wiip 조율 필요',
+  },
+  {
+    group:'미국 — 기타 공동제작',
+    id:'p6', title:'킹더랜드', partner:'TCC', type:'공동제작', region:'미국',
+    certainty:50,
+    note:'쇼러너 확정 후 파일럿 개발 → 플랫폼 피칭. 드라마 시리즈 기준 제작~방영 18개월.',
+    phases:[
+      {type:'dev',   s:mo(2026,1),  e:mo(2026,5),  label:'쇼러너 확정'},
+      {type:'dev',   s:mo(2026,5),  e:mo(2027,3),  label:'파일럿 개발', uncertain:true},
+      {type:'pitch', s:mo(2027,3),  e:mo(2027,9),  label:'플랫폼 피칭', uncertain:true},
+      {type:'prod',  s:mo(2028,1),  e:mo(2029,1),  label:'제작', uncertain:true},
+      {type:'air',   s:mo(2029,1),  e:mo(2029,3),  label:'방영', dot:true, uncertain:true},
+    ],
+    milestones:[{mo:mo(2026,5),label:'쇼러너 확정',color:'#378ADD'}],
+    actions:['쇼러너 최종 확정','공동제작 계약 착수'],
+    issue:'기존 작가 참여 조율 중',
+  },
+  {
+    group:'미국 — 기타 공동제작',
+    id:'p7', title:'이태원클라쓰', partner:'3AD', type:'공동제작', region:'미국',
+    certainty:55,
+    note:'파일럿 아웃라인 검토 완료 단계. 대본→피칭 사이클 빠르게 진행 가능.',
+    phases:[
+      {type:'dev',   s:mo(2026,1),  e:mo(2026,6),  label:'아웃라인 → 파일럿 대본'},
+      {type:'pitch', s:mo(2026,6),  e:mo(2026,12), label:'플랫폼 피칭', uncertain:true},
+      {type:'prod',  s:mo(2027,6),  e:mo(2028,6),  label:'제작', uncertain:true},
+      {type:'air',   s:mo(2028,6),  e:mo(2028,9),  label:'방영', dot:true, uncertain:true},
+    ],
+    milestones:[
+      {mo:mo(2026,6),  label:'피칭 시작', color:'#BA7517'},
+      {mo:mo(2027,6),  label:'제작 확정', color:'#639922'},
+    ],
+    actions:['SLL 아웃라인 의견 3AD 전달','대본 착수 일정 확정'],
+    issue:'없음',
+  },
+  {
+    group:'미국 — 기타 공동제작',
+    id:'p8', title:'미스티', partner:'Jennifer / Two Brothers', type:'공동제작', region:'미국',
+    certainty:35,
+    note:'공동제작 구조 협의가 아직 초기 단계. 영국 파트너 포함 구조가 복잡 → 딜 타임라인 불확실.',
+    phases:[
+      {type:'dev',   s:mo(2026,3),  e:mo(2026,9),  label:'딜 구조 협의', uncertain:true},
+      {type:'dev',   s:mo(2026,9),  e:mo(2027,9),  label:'작가 / 스크립트', uncertain:true},
+      {type:'pitch', s:mo(2027,9),  e:mo(2028,3),  label:'피칭', uncertain:true},
+      {type:'prod',  s:mo(2028,9),  e:mo(2029,9),  label:'제작', uncertain:true},
+    ],
+    milestones:[],
+    actions:['미팅 일정 확정','딜 구조 제안서 준비'],
+    issue:'영국 Two Brothers 삼자 구조 → 딜 복잡',
+  },
+  {
+    group:'미국 — 포맷판매',
+    id:'p9', title:'히어로는 아닙니다만', partner:'3AD / Disney+', type:'포맷판매', region:'미국',
+    certainty:68,
+    note:'파일럿 아웃라인 Disney+ 통과. 대본 완성 후 파일럿 EP 제작 → 편성 확정.',
+    phases:[
+      {type:'dev',   s:mo(2026,1),  e:mo(2026,8),  label:'파일럿 대본 집필'},
+      {type:'pitch', s:mo(2026,8),  e:mo(2026,12), label:'파일럿 EP 제작'},
+      {type:'prod',  s:mo(2027,1),  e:mo(2027,9),  label:'시리즈 편성 → 제작', uncertain:true},
+      {type:'air',   s:mo(2027,9),  e:mo(2027,12), label:'Disney+ 방영', dot:true, uncertain:true},
+    ],
+    milestones:[
+      {mo:mo(2026,8),  label:'대본 완성', color:'#378ADD'},
+      {mo:mo(2026,12), label:'편성 확정', color:'#639922'},
+      {mo:mo(2027,9),  label:'방영', color:'#9B4DCA'},
+    ],
+    actions:['파일럿 대본 Disney+ 제출 (Q2~Q3)','대본 통과 시 파일럿 EP 즉시 제작'],
+    issue:'파일럿 대본 퀄리티가 편성 결정 핵심 변수',
+  },
+  {
+    group:'미국 — 포맷판매',
+    id:'p10', title:'닥터 차정숙 (미국)', partner:'3AD / ABC', type:'포맷판매', region:'미국',
+    certainty:40,
+    note:'ABC 탈락 후 재개발 중. 다음 파일럿 라운드는 2026 가을~2027 초. 신규 작가 섭외가 성패 좌우.',
+    phases:[
+      {type:'dev',   s:mo(2026,1),  e:mo(2026,9),  label:'신규 작가 태핑 / 재개발'},
+      {type:'pitch', s:mo(2026,9),  e:mo(2027,3),  label:'ABC 재피칭', uncertain:true},
+      {type:'prod',  s:mo(2027,6),  e:mo(2028,6),  label:'파일럿 → 시리즈', uncertain:true},
+      {type:'air',   s:mo(2028,9),  e:mo(2028,12), label:'방영', dot:true, uncertain:true},
+    ],
+    milestones:[
+      {mo:mo(2026,9),  label:'재피칭', color:'#BA7517'},
+    ],
+    actions:['신규 작가 태핑 → Q2 계약','K드라마 요소 복원 방향 수정'],
+    issue:'David Shore 등 강팀과 경쟁 예상',
+  },
+  {
+    group:'캐나다 — CAPCA 공동제작',
+    id:'p11', title:'서울팰리스', partner:'Banger Film / 쿠팡', type:'공동제작', region:'캐나다',
+    certainty:72,
+    note:'대본 각색 진행 중. 공동제작 계약 체결 후 캐스팅·제작 착수. 2027년 방영 목표.',
+    phases:[
+      {type:'dev',   s:mo(2026,1),  e:mo(2026,6),  label:'대본 각색 · 계약 체결'},
+      {type:'dev',   s:mo(2026,6),  e:mo(2026,10), label:'캐스팅 / Pre-Production'},
+      {type:'prod',  s:mo(2026,10), e:mo(2027,5),  label:'촬영 · 후반작업', uncertain:true},
+      {type:'air',   s:mo(2027,5),  e:mo(2027,8),  label:'쿠팡 / Crave 방영', dot:true, uncertain:true},
+    ],
+    milestones:[
+      {mo:mo(2026,5),  label:'계약 체결', color:'#378ADD'},
+      {mo:mo(2026,10), label:'촬영 시작', color:'#639922'},
+      {mo:mo(2027,5),  label:'방영', color:'#9B4DCA'},
+    ],
+    actions:['공동제작 계약 체결 (상반기)','캐스팅 태핑 병행 (4월~)'],
+    issue:'캐스팅 따라 예산 규모 재정비 필요',
+  },
+  {
+    group:'캐나다 — CAPCA 공동제작',
+    id:'p12', title:'Benjamin Ojo', partner:'Little Engine / TCC', type:'공동제작', region:'캐나다',
+    certainty:58,
+    note:'Perry 쇼러너 확정 후 기획안 완성 → OTT 피칭. Netflix·Amazon 글로벌 타겟.',
+    phases:[
+      {type:'dev',   s:mo(2026,1),  e:mo(2026,8),  label:'쇼러너 온보딩 · 기획안'},
+      {type:'pitch', s:mo(2026,8),  e:mo(2027,2),  label:'글로벌 OTT 피칭', uncertain:true},
+      {type:'prod',  s:mo(2027,5),  e:mo(2028,5),  label:'제작', uncertain:true},
+      {type:'air',   s:mo(2028,5),  e:mo(2028,8),  label:'방영', dot:true, uncertain:true},
+    ],
+    milestones:[
+      {mo:mo(2026,7),  label:'쇼러너 계약', color:'#378ADD'},
+      {mo:mo(2026,8),  label:'피칭 시작', color:'#BA7517'},
+    ],
+    actions:['Perry 계약 Q2 목표','기획안 완성 후 피칭 자료 준비'],
+    issue:'WGA 계약 조건 복잡',
+  },
+  {
+    group:'캐나다 — CAPCA 공동제작',
+    id:'p13', title:'Good Detective', partner:'TCC / Veena Sud', type:'공동제작', region:'캐나다',
+    certainty:55,
+    note:'Creative BC 지원 확보 완료. Renuka 집필 계약 후 파일럿 대본 → 재피칭.',
+    phases:[
+      {type:'dev',   s:mo(2026,1),  e:mo(2026,7),  label:'작가 계약 · 파일럿 집필'},
+      {type:'pitch', s:mo(2026,7),  e:mo(2027,1),  label:'재피칭 (Veena Sud)', uncertain:true},
+      {type:'prod',  s:mo(2027,6),  e:mo(2028,6),  label:'제작', uncertain:true},
+      {type:'air',   s:mo(2028,6),  e:mo(2028,9),  label:'방영', dot:true, uncertain:true},
+    ],
+    milestones:[
+      {mo:mo(2026,6),  label:'집필 계약', color:'#378ADD'},
+      {mo:mo(2026,7),  label:'피칭', color:'#BA7517'},
+    ],
+    actions:['Renuka 집필 계약 Q2','파일럿 대본 착수'],
+    issue:'작가 계약 장기화 시 일정 지연',
+  },
+];
+
+function certLabel(n){
+  if(n>=70) return {text:'높음',color:'#639922',bg:'#EAF3DE'};
+  if(n>=50) return {text:'보통',color:'#BA7517',bg:'#FAEEDA'};
+  return       {text:'낮음',color:'#D85A30',bg:'#FCEBEB'};
+}
+
+let openId = null;
+
+function buildGrid(){
+  const grid = document.getElementById('grid');
+  grid.innerHTML = '';
+
+  const headRow = document.createElement('div');
+  headRow.className = 'timeline-head';
+  headRow.style.position = 'sticky';
+  headRow.style.top = '0';
+  headRow.style.zIndex = '5';
+  headRow.style.background = 'var(--color-background-primary)';
+
+  const spacer = document.createElement('div');
+  spacer.className = 'thl-spacer';
+  headRow.appendChild(spacer);
+
+  const yearsDiv = document.createElement('div');
+  yearsDiv.className = 'thl-years';
+
+  for(let y=2026;y<=2029;y++){
+    const yb = document.createElement('div');
+    yb.className = 'year-block';
+    yb.style.flex = `0 0 ${12*MW}px`;
+
+    const yl = document.createElement('div');
+    yl.className = 'year-label';
+    yl.textContent = y;
+    yb.appendChild(yl);
+
+    const mr = document.createElement('div');
+    mr.className = 'months-row';
+    const mNames = ['1','2','3','4','5','6','7','8','9','10','11','12'];
+    mNames.forEach((m,mi)=>{
+      const ml = document.createElement('div');
+      ml.className = 'ml' + (y===2026 && mi===3?' now':'');
+      ml.textContent = m;
+      mr.appendChild(ml);
+    });
+    yb.appendChild(mr);
+    yearsDiv.appendChild(yb);
+  }
+  headRow.appendChild(yearsDiv);
+  grid.appendChild(headRow);
+
+  const nowLine = document.createElement('div');
+  nowLine.className = 'now-line';
+  nowLine.style.left = (188 + NOW_OFFSET*MW + MW/2) + 'px';
+  grid.appendChild(nowLine);
+
+  let lastGroup = null;
+  projects.forEach(p=>{
+    if(p.group !== lastGroup){
+      const gh = document.createElement('div');
+      gh.className = 'group-header';
+      gh.style.marginLeft = '0';
+      gh.textContent = p.group;
+      grid.appendChild(gh);
+      lastGroup = p.group;
+    }
+
+    const row = document.createElement('div');
+    row.className = 'proj-row';
+    row.id = 'row-'+p.id;
+
+    const lc = document.createElement('div');
+    lc.className = 'proj-label-cell';
+    lc.onclick = ()=>toggleDetail(p);
+    const cl = certLabel(p.certainty);
+    lc.innerHTML = `<div class="proj-title">${p.title}</div>
+<div class="proj-sub">
+  <div class="region-dot" style="background:${p.region==='미국'?'#378ADD':p.region==='캐나다'?'#C63030':'#639922'}"></div>
+  <span>${p.partner.split('/')[0].trim()}</span>
+  <span style="display:inline-block;font-size:9px;padding:1px 6px;border-radius:8px;background:${cl.bg};color:${cl.color};font-weight:500">${p.certainty}%</span>
+</div>`;
+    row.appendChild(lc);
+
+    const bc = document.createElement('div');
+    bc.className = 'proj-bars-cell';
+
+    p.phases.forEach(ph=>{
+      const c = PHASE_COLORS[ph.type];
+      const bar = document.createElement('div');
+      bar.className = 'bar';
+      const w = (ph.e - ph.s) * MW;
+      bar.style.cssText = `left:${ph.s*MW}px;width:${w}px;background:${c.bg};opacity:${ph.uncertain?0.55:1}`;
+      const span = document.createElement('span');
+      span.className = 'bar-label';
+      span.style.color = c.text;
+      span.textContent = ph.label;
+      bar.appendChild(span);
+      bar.addEventListener('mouseenter', e=>showTT(e,p,ph));
+      bar.addEventListener('mouseleave', ()=>hideTT());
+      bar.addEventListener('mousemove', e=>moveTT(e));
+      bc.appendChild(bar);
+    });
+
+    p.milestones.forEach(ms=>{
+      const dot = document.createElement('div');
+      dot.style.cssText = `position:absolute;left:${ms.mo*MW+MW/2-4}px;top:20px;width:8px;height:8px;border-radius:50%;background:${ms.color};border:1.5px solid var(--color-background-primary);z-index:4`;
+      bc.appendChild(dot);
+    });
+
+    row.appendChild(bc);
+    grid.appendChild(row);
+  });
+
+  const det = document.getElementById('detail');
+  det.style.marginTop = '12px';
+}
+
+function toggleDetail(p){
+  const det = document.getElementById('detail');
+  if(openId === p.id){ det.classList.remove('open'); openId=null; return; }
+  openId = p.id;
+  const cl = certLabel(p.certainty);
+
+  const pitchPhase = p.phases.find(ph=>ph.type==='pitch');
+  const prodPhase  = p.phases.find(ph=>ph.type==='prod');
+  const airPhase   = p.phases.find(ph=>ph.type==='air');
+
+  function moStr(m){
+    if(m==null) return 'TBD';
+    const y = START_YEAR + Math.floor(m/12);
+    const mo = (m%12)+1;
+    return `${y}년 ${mo}월`;
+  }
+
+  const actHtml = p.actions.map(a=>`<div class="dp-act-item">${a}</div>`).join('');
+
+  det.innerHTML = `<div class="dp-title">${p.title} <span style="font-size:11px;font-weight:400;color:var(--color-text-tertiary)">${p.partner}</span></div>
+<div class="dp-tags">
+  <span class="dp-tag" style="background:${cl.bg};color:${cl.color}">성사 가능성 ${p.certainty}% (${cl.text})</span>
+  <span class="dp-tag" style="background:var(--color-background-secondary);color:var(--color-text-secondary)">${p.type}</span>
+  ${p.issue!=='없음'?`<span class="dp-tag" style="background:#FCEBEB;color:#D85A30">⚠ ${p.issue}</span>`:''}
+</div>
+<div class="dp-row"><span class="dp-key">피칭 시점</span><span>${pitchPhase?moStr(pitchPhase.s):'개발 후 결정'} ${pitchPhase?.uncertain?'(예측)':''}</span></div>
+<div class="dp-row"><span class="dp-key">제작 확정</span><span>${prodPhase?moStr(prodPhase.s):'TBD'} ${prodPhase?.uncertain?'(예측)':''}</span></div>
+<div class="dp-row"><span class="dp-key">방영 / 개봉</span><span>${airPhase?moStr(airPhase.s):'TBD'} ${airPhase?.uncertain?'(예측)':''}</span></div>
+<div class="dp-row"><span class="dp-key">현황</span><span>${p.note}</span></div>
+<div class="dp-actions"><div class="dp-act-title">즉시 액션</div>${actHtml}</div>
+<div class="certainty-bar"><div class="certainty-fill" style="width:${p.certainty}%;background:${cl.color}"></div></div>`;
+
+  det.classList.add('open');
+  det.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+const tt = document.getElementById('tt');
+function showTT(e,p,ph){
+  const c = PHASE_COLORS[ph.type];
+  const typeLabel = {dev:'개발',pitch:'피칭',prod:'제작',air:'방영',hold:'대기'}[ph.type];
+  const sy = START_YEAR+Math.floor(ph.s/12), sm=(ph.s%12)+1;
+  const ey = START_YEAR+Math.floor(ph.e/12), em=(ph.e%12)+1;
+  tt.innerHTML = `<div class="tt-title" style="color:${c.bg}">${typeLabel}</div>
+<div class="tt-row"><span class="tt-label">기간</span>${sy}년 ${sm}월 — ${ey}년 ${em}월</div>
+<div class="tt-row"><span class="tt-label">내용</span>${ph.label}</div>
+${ph.uncertain?'<div class="tt-row" style="color:#888780">* 예측 구간 (미확정)</div>':''}`;
+  tt.style.display = 'block';
+  moveTT(e);
+}
+function moveTT(e){ tt.style.left=(e.clientX+14)+'px'; tt.style.top=(e.clientY-36)+'px'; }
+function hideTT(){ tt.style.display='none'; }
+
+buildGrid();
+</script>
