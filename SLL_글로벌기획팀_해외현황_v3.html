@@ -1,0 +1,1291 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SLL 글로벌기획팀 — 해외 오리지널 현황</title>
+<style>
+:root{
+  --navy:#1A2E4A;--navy2:#2D4A6A;--steel:#4A7A9B;
+  --ice:#EDF5FB;--icebdr:#C8D8E8;
+  --gold:#E8A020;--goldbg:#FEF3D8;
+  --green:#1A7A43;--greenbg:#D4EDDA;--greenbdr:#28A745;
+  --amber:#8B5A00;--amberbg:#FFF3CD;--amberbdr:#E8A020;
+  --gray:#5A6A7A;--graybg:#E9EEF3;--graybdr:#9AABB8;
+  --red:#8B1A1A;--redbg:#FDECEA;--redbdr:#DC3545;
+  --usa:#2E75B6;--can:#C63030;
+  --bg:#F4F7FA;--white:#fff;
+  --text:#1A2E4A;--textsub:#4A5E70;--textmut:#7A8F9E;
+  --bdr:#C8D8E8;--bdrlt:#E0EBF5;
+  --font:-apple-system,BlinkMacSystemFont,'Malgun Gothic','Apple SD Gothic Neo',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font);font-size:13px;background:var(--bg);color:var(--text);min-height:100vh}
+.site-header{background:var(--navy);padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:52px;position:sticky;top:0;z-index:100}
+.site-title{font-size:15px;font-weight:600;color:#fff;display:flex;align-items:center;gap:10px}
+.badge{font-size:11px;font-weight:700;padding:2px 9px;border-radius:10px;background:var(--gold);color:var(--navy)}
+.site-meta{font-size:11px;color:#AACCEE;display:flex;align-items:center;gap:10px}
+.edit-mode-btn{font-size:11px;padding:4px 12px;border-radius:20px;border:1px solid rgba(255,255,255,.3);background:transparent;color:#fff;cursor:pointer;transition:all .2s}
+.edit-mode-btn.active{background:var(--gold);color:var(--navy);border-color:var(--gold);font-weight:700}
+.nav{background:var(--white);border-bottom:0.5px solid var(--bdr);display:flex;gap:0;padding:0 20px;position:sticky;top:52px;z-index:90}
+.nav-tab{font-size:13px;padding:12px 18px;border:none;background:none;color:var(--textmut);cursor:pointer;border-bottom:2px solid transparent;font-family:var(--font);font-weight:500;transition:all .15s}
+.nav-tab:hover{color:var(--text)}
+.nav-tab.on{color:var(--navy);border-bottom-color:var(--navy)}
+.page{max-width:1300px;margin:0 auto;padding:20px 20px 60px}
+.tab-content{display:none}
+.tab-content.on{display:block}
+.sec-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px}
+.sec-title{font-size:16px;font-weight:600;color:var(--navy)}
+.sec-sub{font-size:11px;color:var(--textmut);margin-top:2px}
+.legend{display:flex;gap:12px;flex-wrap:wrap;padding:9px 14px;background:var(--white);border-radius:8px;border:0.5px solid var(--bdr);margin-bottom:16px}
+.leg{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--textsub)}
+.leg-box{width:26px;height:8px;border-radius:2px}
+
+/* TIMELINE */
+.group-wrap{margin-bottom:16px}
+.group-label-row{display:flex;align-items:center;gap:8px;margin:14px 0 6px}
+.group-label{font-size:10px;font-weight:700;letter-spacing:.08em;color:var(--textmut);text-transform:uppercase;background:var(--bg);padding:5px 10px;border-radius:4px}
+.group-edit-btn{font-size:10px;padding:3px 9px;border-radius:10px;border:0.5px solid var(--bdr);background:var(--white);color:var(--textmut);cursor:pointer;display:none}
+.edit-mode .group-edit-btn{display:inline-block}
+.add-proj-btn{font-size:11px;padding:4px 12px;border-radius:8px;border:0.5px dashed var(--bdr);background:var(--white);color:var(--textmut);cursor:pointer;display:none;width:100%;margin-top:4px}
+.edit-mode .add-proj-btn{display:block}
+.tl-scroll{overflow-x:auto;border-radius:10px;border:0.5px solid var(--bdr);box-shadow:0 1px 6px rgba(0,0,0,.05)}
+.tl-wrap{background:var(--white);min-width:860px}
+.tl-head{display:flex;border-bottom:0.5px solid var(--bdrlt);background:var(--bg);border-radius:10px 10px 0 0}
+.tl-lbl{flex:0 0 206px;padding:7px 12px;font-size:10px;font-weight:600;color:var(--textmut);border-right:0.5px solid var(--bdrlt)}
+.tl-cols{flex:1;display:flex}
+.tl-yr{display:flex;flex-direction:column;border-left:0.5px solid var(--bdrlt)}
+.tl-yr:first-child{border-left:none}
+.tl-yname{font-size:10px;font-weight:600;color:var(--textsub);padding:3px 8px;letter-spacing:.05em}
+.tl-months{display:flex}
+.tl-m{font-size:9px;color:var(--textmut);width:22px;text-align:center;padding:2px 0 4px}
+.tl-m.now{color:var(--usa);font-weight:700}
+.tl-row{display:flex;align-items:center;border-bottom:0.5px solid var(--bdrlt);transition:background .1s;position:relative}
+.tl-row:last-child{border-bottom:none}
+.tl-row:not(.editing):hover{background:var(--ice)}
+.tl-cell{flex:0 0 206px;padding:6px 12px;border-right:0.5px solid var(--bdrlt);position:relative}
+.tl-ptitle{font-size:12px;font-weight:500;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:170px}
+.tl-psub{font-size:10px;color:var(--textmut);margin-top:1px;display:flex;align-items:center;gap:4px;flex-wrap:wrap}
+.rdot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.row-actions{position:absolute;right:4px;top:50%;transform:translateY(-50%);display:none;gap:3px}
+.edit-mode .tl-row:hover .row-actions{display:flex}
+.row-btn{font-size:10px;padding:2px 7px;border-radius:6px;border:none;cursor:pointer;font-family:var(--font)}
+.row-btn.edit{background:var(--navy);color:#fff}
+.row-btn.del{background:var(--redbg);color:var(--red)}
+.tl-bars{flex:1;position:relative;height:36px;cursor:pointer}
+.bar{position:absolute;height:14px;top:5px;border-radius:3px;display:flex;align-items:center;overflow:hidden}
+.bl{font-size:9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:0 5px;font-weight:500}
+.mdot{position:absolute;top:21px;width:8px;height:8px;border-radius:50%;border:1.5px solid var(--white);z-index:4}
+.now-v{position:absolute;top:0;bottom:0;width:1.5px;background:var(--usa);opacity:.3;pointer-events:none;z-index:6}
+.det-row{border-bottom:0.5px solid var(--bdrlt);display:none}
+.det-row.open{display:flex}
+.det-cell{padding:12px 16px 12px 24px;background:var(--ice);flex:1;font-size:12px;color:var(--textsub)}
+.det-grid{display:grid;grid-template-columns:82px 1fr;gap:3px 10px;margin-bottom:8px}
+.dk{font-size:11px;color:var(--textmut)}
+.dv{color:var(--text)}
+.det-acts{padding-top:8px;border-top:0.5px solid var(--bdr);margin-top:6px}
+.det-act-t{font-size:10px;font-weight:700;letter-spacing:.04em;color:var(--textmut);text-transform:uppercase;margin-bottom:5px}
+.act-item{font-size:12px;color:var(--textsub);margin-bottom:3px;padding-left:12px;position:relative}
+.act-item::before{content:"→";position:absolute;left:0;color:var(--textmut)}
+.cert{font-size:9px;padding:1px 6px;border-radius:8px;font-weight:600}
+
+/* UPDATES */
+.upd-entry{background:var(--white);border:0.5px solid var(--bdr);border-radius:10px;margin-bottom:10px;overflow:hidden}
+.upd-entry-head{padding:10px 14px;background:var(--bg);display:flex;align-items:center;justify-content:space-between;border-bottom:0.5px solid var(--bdrlt)}
+.upd-date{font-size:12px;font-weight:600;color:var(--navy)}
+.upd-count{font-size:11px;color:var(--textmut)}
+.upd-items{padding:10px 14px;display:flex;flex-direction:column;gap:8px}
+.upd-item{display:flex;gap:10px;align-items:flex-start;padding:8px;border-radius:6px;background:var(--bg)}
+.upd-proj{font-size:11px;font-weight:600;color:var(--white);padding:2px 8px;border-radius:10px;flex-shrink:0;white-space:nowrap}
+.upd-content p{font-size:12px;color:var(--text);line-height:1.5}
+.upd-content .upd-next{font-size:11px;color:var(--textsub);margin-top:3px}
+
+/* COST */
+.cost-total-card{background:var(--navy);border-radius:10px;padding:14px 18px;color:#fff;display:flex;gap:24px;flex-wrap:wrap;margin-bottom:20px}
+.ct-item p{font-size:11px;color:#AACCEE;margin-bottom:2px}
+.ct-item strong{font-size:20px;font-weight:700}
+.cost-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px}
+.cost-card{background:var(--white);border:0.5px solid var(--bdr);border-radius:10px;overflow:hidden}
+.cost-head{padding:10px 14px;display:flex;align-items:center;justify-content:space-between;border-bottom:0.5px solid var(--bdrlt)}
+.cost-title{font-size:13px;font-weight:600;color:var(--navy)}
+.cost-partner{font-size:11px;color:var(--textmut)}
+.cost-body{padding:12px 14px}
+.cost-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.cost-label{font-size:11px;color:var(--textmut)}
+.cost-val{font-size:13px;font-weight:600}
+.cost-bar-wrap{height:6px;background:var(--graybg);border-radius:3px;margin-bottom:10px;overflow:hidden}
+.cost-bar-fill{height:100%;border-radius:3px}
+.cost-note{font-size:10px;color:var(--textmut);line-height:1.5;border-top:0.5px solid var(--bdrlt);padding-top:8px;margin-top:4px}
+
+/* MODAL */
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:200;display:none;align-items:center;justify-content:center}
+.modal-bg.open{display:flex}
+.modal{background:var(--white);border-radius:14px;padding:22px;width:600px;max-width:95vw;max-height:90vh;overflow-y:auto;box-shadow:0 8px 40px rgba(0,0,0,.18)}
+.modal h2{font-size:16px;font-weight:600;margin-bottom:16px;color:var(--navy)}
+.modal-section{font-size:11px;font-weight:700;letter-spacing:.06em;color:var(--textmut);text-transform:uppercase;margin:14px 0 8px;padding-bottom:4px;border-bottom:0.5px solid var(--bdrlt)}
+.form-row{margin-bottom:10px}
+.form-row label{font-size:11px;font-weight:600;color:var(--textmut);display:block;margin-bottom:3px}
+.form-row input,.form-row select,.form-row textarea{width:100%;padding:8px 10px;border:0.5px solid var(--bdr);border-radius:7px;font-size:13px;font-family:var(--font);color:var(--text);background:var(--white)}
+.form-row input:focus,.form-row select:focus,.form-row textarea:focus{outline:none;border-color:var(--navy)}
+.form-row textarea{min-height:70px;resize:vertical}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.phase-list{display:flex;flex-direction:column;gap:6px;margin-bottom:8px}
+.phase-item{display:grid;grid-template-columns:100px 1fr 52px 52px 52px 52px 24px;gap:6px;align-items:center;background:var(--bg);padding:7px 10px;border-radius:7px;border:0.5px solid var(--bdrlt)}
+.phase-item select,.phase-item input{padding:4px 7px;border:0.5px solid var(--bdr);border-radius:5px;font-size:12px;font-family:var(--font);color:var(--text);background:var(--white)}
+.phase-item .ph-lbl{font-size:11px;color:var(--textmut);white-space:nowrap}
+.ph-del{background:none;border:none;color:var(--red);cursor:pointer;font-size:14px;padding:0 2px}
+.add-phase-btn{font-size:11px;padding:5px 12px;border-radius:7px;border:0.5px dashed var(--bdr);background:var(--white);color:var(--textsub);cursor:pointer;width:100%}
+.form-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:16px}
+.btn-cancel{padding:7px 16px;border:0.5px solid var(--bdr);border-radius:8px;background:var(--white);color:var(--textsub);cursor:pointer;font-family:var(--font);font-size:13px}
+.btn-danger{padding:7px 16px;border:none;border-radius:8px;background:var(--redbg);color:var(--red);cursor:pointer;font-family:var(--font);font-size:13px;font-weight:500;margin-right:auto}
+.btn-save{padding:7px 20px;border:none;border-radius:8px;background:var(--navy);color:#fff;cursor:pointer;font-family:var(--font);font-size:13px;font-weight:500}
+.upd-add-btn{font-size:12px;padding:6px 16px;background:var(--navy);color:#fff;border:none;border-radius:8px;cursor:pointer;font-family:var(--font)}
+.upd-period-btn{font-size:11px;padding:4px 12px;border:0.5px solid var(--bdr);border-radius:12px;background:var(--white);color:var(--textsub);cursor:pointer}
+.upd-period-btn.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+.tag{font-size:10px;padding:2px 8px;border-radius:8px;font-weight:600;display:inline-block}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--navy);color:#fff;padding:8px 18px;border-radius:20px;font-size:12px;z-index:300;opacity:0;transition:opacity .3s;pointer-events:none}
+.toast.show{opacity:1}
+</style>
+</head>
+<body>
+
+<div class="site-header">
+  <div class="site-title">
+    <span class="badge">SLL</span>
+    글로벌기획팀 — 해외 오리지널 현황
+  </div>
+  <div class="site-meta">
+    <span id="hdate"></span>
+    <button class="edit-mode-btn" id="editModeBtn" onclick="toggleEditMode()">✏️ 편집 모드</button>
+  </div>
+</div>
+
+<nav class="nav">
+  <button class="nav-tab on" onclick="switchTab('timeline',this)">📅 전체 타임라인</button>
+  <button class="nav-tab" onclick="switchTab('updates',this)">📝 격주 업데이트</button>
+  <button class="nav-tab" onclick="switchTab('cost',this)">💰 비용 현황</button>
+</nav>
+
+<div class="page">
+
+<!-- TAB 1 -->
+<div class="tab-content on" id="tab-timeline">
+  <div class="sec-head">
+    <div>
+      <div class="sec-title">프로젝트 로드맵 2026–2029</div>
+      <div class="sec-sub">행 클릭 → 상세 정보 · 편집 모드 ON → 프로젝트 추가/수정/삭제</div>
+    </div>
+    <div id="add-group-wrap" style="display:none">
+      <button class="upd-add-btn" onclick="openGroupModal()">+ 그룹 추가</button>
+    </div>
+  </div>
+  <div class="legend">
+    <div class="leg"><div class="leg-box" style="background:#378ADD"></div>개발/집필</div>
+    <div class="leg"><div class="leg-box" style="background:#BA7517"></div>피칭</div>
+    <div class="leg"><div class="leg-box" style="background:#639922"></div>제작/편성 확정</div>
+    <div class="leg"><div class="leg-box" style="background:#9B4DCA"></div>방영/개봉</div>
+    <div class="leg"><div class="leg-box" style="background:#888780;opacity:.45"></div>예측 구간</div>
+  </div>
+  <div id="tl-root"></div>
+</div>
+
+<!-- TAB 2 -->
+<div class="tab-content" id="tab-updates">
+  <div class="sec-head">
+    <div><div class="sec-title">업데이트 사항</div><div class="sec-sub">일자별 프로젝트 업데이트 · 대표님 의사결정 필요 사항 포함</div></div>
+    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+      <button class="upd-period-btn on" id="uf-all" onclick="filterUpd('all',this)">전체</button>
+      <button class="upd-period-btn" onclick="filterUpd('미국',this)">미국</button>
+      <button class="upd-period-btn" onclick="filterUpd('캐나다',this)">캐나다</button>
+      <button class="upd-period-btn" id="uf-dec" onclick="filterUpd('decision',this)">🔴 의사결정 필요</button>
+      <button class="upd-add-btn" onclick="openUpdDateModal()">+ 날짜 추가</button>
+    </div>
+  </div>
+  <div id="upd-root"></div>
+</div>
+
+<!-- TAB 3 -->
+<div class="tab-content" id="tab-cost">
+  <div class="sec-head">
+    <div><div class="sec-title">비용 현황 (SLL 담당)</div><div class="sec-sub">SLL 부담분 기준 · 클릭하여 직접 수정</div></div>
+    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+      <div style="display:flex;align-items:center;gap:6px;background:var(--white);border:0.5px solid var(--bdr);border-radius:8px;padding:5px 12px">
+        <span style="font-size:11px;color:var(--textmut)">환율</span>
+        <input id="fx-rate" type="number" value="1380" style="width:72px;padding:3px 6px;border:0.5px solid var(--bdr);border-radius:5px;font-size:12px;font-family:var(--font)" onchange="buildCost()">
+        <span style="font-size:11px;color:var(--textmut)">원/달러</span>
+      </div>
+      <button class="upd-add-btn" onclick="openCostAddModal()">+ 항목 추가</button>
+    </div>
+  </div>
+  <div id="cost-root"></div>
+</div>
+
+</div>
+
+<!-- PROJECT EDIT MODAL -->
+<div class="modal-bg" id="projModal">
+<div class="modal">
+  <h2 id="proj-modal-title">프로젝트 추가</h2>
+  <input type="hidden" id="pm-gid">
+  <input type="hidden" id="pm-pid">
+
+  <div class="modal-section">기본 정보</div>
+  <div class="form-grid">
+    <div class="form-row"><label>프로젝트명 (한국어)</label><input id="pm-title" placeholder="예: 힘쎈여자 도봉순"></div>
+    <div class="form-row"><label>파트너사</label><input id="pm-partner" placeholder="예: Wiip / Disney+"></div>
+  </div>
+  <div class="form-grid">
+    <div class="form-row"><label>현재 단계</label><input id="pm-stage" placeholder="예: 피칭 → 협상"></div>
+    <div class="form-row">
+      <label>권역</label>
+      <select id="pm-region">
+        <option value="미국">미국</option>
+        <option value="캐나다">캐나다</option>
+        <option value="대만">대만</option>
+        <option value="기타">기타</option>
+      </select>
+    </div>
+  </div>
+  <div class="form-grid">
+    <div class="form-row"><label>성사 가능성 (%)</label><input id="pm-cert" type="number" min="0" max="100" placeholder="65"></div>
+    <div class="form-row">
+      <label>유형</label>
+      <select id="pm-type">
+        <option value="공동제작">공동제작</option>
+        <option value="리메이크">리메이크</option>
+        <option value="포맷판매">포맷판매</option>
+        <option value="CAPCA">CAPCA</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="modal-section">현황 요약</div>
+  <div class="form-row"><label>현황 메모</label><textarea id="pm-note" placeholder="현재 진행 상황 및 맥락..."></textarea></div>
+  <div class="form-grid">
+    <div class="form-row"><label>피칭 시점</label><input id="pm-pitch" placeholder="예: 2026년 6월"></div>
+    <div class="form-row"><label>제작 확정 시점</label><input id="pm-prod" placeholder="예: 2027년 1월 (예측)"></div>
+  </div>
+  <div class="form-grid">
+    <div class="form-row"><label>방영/개봉 시점</label><input id="pm-air" placeholder="예: 2028년 3월 (예측)"></div>
+    <div class="form-row"><label>주요 이슈</label><input id="pm-issue" placeholder="예: 바이어 1개사 → 신속 클로징 필요"></div>
+  </div>
+  <div class="form-row"><label>즉시 액션 (줄바꿈으로 구분)</label><textarea id="pm-actions" placeholder="액션 1&#10;액션 2"></textarea></div>
+
+  <div class="modal-section">타임라인 구간 설정</div>
+  <div style="font-size:11px;color:var(--textmut);margin-bottom:8px">유형: dev=개발, pitch=피칭, prod=제작, air=방영 · 시작/종료: 년도와 월 입력 · 예측=불확실 구간</div>
+  <div style="display:grid;grid-template-columns:90px 1fr 50px 50px 50px 50px 24px;gap:4px;padding:0 10px;margin-bottom:4px">
+    <span style="font-size:10px;color:var(--textmut)">유형</span>
+    <span style="font-size:10px;color:var(--textmut)">라벨</span>
+    <span style="font-size:10px;color:var(--textmut)">시작년</span>
+    <span style="font-size:10px;color:var(--textmut)">시작월</span>
+    <span style="font-size:10px;color:var(--textmut)">종료년</span>
+    <span style="font-size:10px;color:var(--textmut)">종료월</span>
+    <span></span>
+  </div>
+  <div class="phase-list" id="phase-list"></div>
+  <button class="add-phase-btn" onclick="addPhaseRow()">+ 구간 추가</button>
+
+  <div class="form-actions">
+    <button class="btn-danger" id="pm-delete-btn" onclick="deleteProject()" style="display:none">🗑 삭제</button>
+    <button class="btn-cancel" onclick="closeProjModal()">취소</button>
+    <button class="btn-save" onclick="saveProject()">저장</button>
+  </div>
+</div>
+</div>
+
+<!-- GROUP EDIT MODAL -->
+<div class="modal-bg" id="groupModal">
+<div class="modal" style="width:440px">
+  <h2 id="gm-title">그룹 추가</h2>
+  <input type="hidden" id="gm-gid">
+  <div class="form-row"><label>그룹 이름</label><input id="gm-label" placeholder="예: 미국 — 공동제작 (wiip)"></div>
+  <div class="form-row">
+    <label>그룹 색상</label>
+    <select id="gm-color">
+      <option value="#2E75B6">미국 (파랑)</option>
+      <option value="#C63030">캐나다 (빨강)</option>
+      <option value="#639922">녹색</option>
+      <option value="#8B5A00">주황</option>
+    </select>
+  </div>
+  <div class="form-actions">
+    <button class="btn-danger" id="gm-delete-btn" onclick="deleteGroup()" style="display:none">🗑 그룹 삭제</button>
+    <button class="btn-cancel" onclick="closeGroupModal()">취소</button>
+    <button class="btn-save" onclick="saveGroup()">저장</button>
+  </div>
+</div>
+</div>
+
+<!-- UPDATE DATE MODAL -->
+<div class="modal-bg" id="updDateModal">
+<div class="modal" style="width:420px">
+  <h2>날짜 추가</h2>
+  <div class="form-row"><label>업데이트 날짜</label><input type="date" id="udd-date"></div>
+  <div class="form-actions">
+    <button class="btn-cancel" onclick="document.getElementById('updDateModal').classList.remove('open')">취소</button>
+    <button class="btn-save" onclick="saveUpdDate()">추가</button>
+  </div>
+</div>
+</div>
+
+<!-- UPDATE ITEM MODAL -->
+<div class="modal-bg" id="updItemModal">
+<div class="modal" style="width:540px">
+  <h2 id="uim-title">항목 추가</h2>
+  <input type="hidden" id="uim-date">
+  <input type="hidden" id="uim-iid">
+  <div class="form-row"><label>구분</label>
+    <select id="uim-type">
+      <option value="update">📋 프로젝트 업데이트</option>
+      <option value="decision">🔴 대표님 의사결정 필요</option>
+    </select>
+  </div>
+  <div class="form-row" id="uim-proj-row"><label>프로젝트</label><select id="uim-proj"></select></div>
+  <div class="form-row" id="uim-dec-title-row" style="display:none"><label>의사결정 제목</label><input id="uim-dec-title" placeholder="예: 재벌집 중·일 권리 범위 결정"></div>
+  <div class="form-row"><label id="uim-status-label">현황 업데이트</label><textarea id="uim-status" placeholder="진행 내용 또는 의사결정 배경..."></textarea></div>
+  <div class="form-row" id="uim-next-row"><label>다음 단계 / 요청사항</label><input id="uim-next" placeholder="향후 계획 또는 대표님께 요청하는 내용"></div>
+  <div class="form-row" id="uim-deadline-row"><label>결정 필요 시점</label><input id="uim-deadline" placeholder="예: 2026년 5월 초"></div>
+  <div class="form-actions">
+    <button class="btn-danger" id="uim-del-btn" onclick="deleteUpdItem()" style="display:none">🗑 삭제</button>
+    <button class="btn-cancel" onclick="document.getElementById('updItemModal').classList.remove('open')">취소</button>
+    <button class="btn-save" onclick="saveUpdItem()">저장</button>
+  </div>
+</div>
+</div>
+
+<!-- COST EDIT MODAL -->
+<div class="modal-bg" id="costModal">
+<div class="modal" style="width:560px">
+  <h2 id="cm-title">비용 항목 수정</h2>
+  <input type="hidden" id="cm-id">
+  <div class="form-grid">
+    <div class="form-row"><label>프로젝트명</label><input id="cm-title-inp" placeholder="예: 힘쎈여자 도봉순"></div>
+    <div class="form-row"><label>파트너사</label><input id="cm-partner" placeholder="예: Wiip"></div>
+  </div>
+  <div class="form-grid">
+    <div class="form-row">
+      <label>권역</label>
+      <select id="cm-region">
+        <option value="미국">미국</option>
+        <option value="캐나다">캐나다</option>
+        <option value="대만">대만</option>
+        <option value="기타">기타</option>
+      </select>
+    </div>
+    <div class="form-row">
+      <label>통화 기준</label>
+      <select id="cm-currency">
+        <option value="krw">한화 (억원)</option>
+        <option value="usd">달러 (만불)</option>
+      </select>
+    </div>
+  </div>
+  <div class="form-grid">
+    <div class="form-row"><label id="cm-spent-label">기집행 금액</label><input id="cm-spent" type="number" step="0.01" placeholder="0"></div>
+    <div class="form-row"><label id="cm-plan-label">추가 예정 금액</label><input id="cm-plan" type="number" step="0.01" placeholder="0"></div>
+  </div>
+  <div class="form-row"><label>비고 / 내역</label><textarea id="cm-note" placeholder="부담 구조, 계약 조건 등..."></textarea></div>
+  <div class="form-actions">
+    <button class="btn-danger" id="cm-del-btn" onclick="deleteCostItem()" style="display:none">🗑 삭제</button>
+    <button class="btn-cancel" onclick="document.getElementById('costModal').classList.remove('open')">취소</button>
+    <button class="btn-save" onclick="saveCostItem()">저장</button>
+  </div>
+</div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ── STATE ──────────────────────────────────────────────────────────────────
+const MW=22, SY=2026;
+function mo(y,m){return(y-SY)*12+(m-1)}
+const PC={dev:'#378ADD',pitch:'#BA7517',prod:'#639922',air:'#9B4DCA'};
+
+let editMode=false;
+let openTLId=null;
+let periodFilter='all';
+
+// LOAD from localStorage or use defaults
+function loadData(){
+  try{
+    const saved=localStorage.getItem('sll_data');
+    if(saved) return JSON.parse(saved);
+  }catch(e){}
+  return getDefaultData();
+}
+function saveData(){
+  try{ localStorage.setItem('sll_data', JSON.stringify(GROUPS)); }catch(e){}
+}
+function saveUpdData(){
+  try{ localStorage.setItem('sll_upd', JSON.stringify(UPDATES)); }catch(e){}
+}
+function loadUpdData(){
+  try{
+    const saved=localStorage.getItem('sll_upd');
+    if(saved) return JSON.parse(saved);
+  }catch(e){}
+  return getDefaultUpdates();
+}
+
+function getDefaultUpdates(){
+  return [
+    {date:'2026-04-22',items:[
+      {pid:'seoul',proj:'서울팰리스',region:'캐나다',status:'1~3부 수정고 및 번역본 수령 완료. 4부 번역 진행 중. 5부 집필 착수.',next:'뱅어와 공동제작 딜텀 체결 예정. 캐스팅 태핑 병행.'},
+      {pid:'hssdb',proj:'힘쎈여자 도봉순',region:'미국',status:'Disney·Netflix·Amazon 피칭 완료. Amazon 불발. Disney/Netflix 회신 대기 중.',next:'오퍼 수신 후 협상 착수.'},
+      {pid:'bargain',proj:'몸값',region:'미국',status:'Jonas 감독 리뷰 의견 전달 완료. 2고 집필 중.',next:'2고 수령 후 피칭 여부 결정. 집필료(약 1억) 지급 예정.'},
+    ]},
+    {date:'2026-04-08',items:[
+      {pid:'dcj-us',proj:'닥터차정숙 (미국)',region:'미국',status:'ABC 파일럿 라운드 탈락. 재개발 방향 결정.',next:'파일럿 아웃라인 수정 완료 후 ABC 재제출.'},
+      {pid:'hero',proj:'히어로는 아닙니다만',region:'미국',status:'Matt Lambert 작가와 Disney+ 피칭 완료(11/7). 20th 작가 계약 진행 중.',next:'작가 계약 후 파일럿 아웃라인 개발.'},
+    ]},
+  ];
+}
+
+function getDefaultData(){
+  return [
+    {gid:'g1',label:'미국 — 리메이크 + 포맷판매',color:'#2E75B6',projects:[
+      {id:'dcj-us',title:'닥터차정숙 (미국)',partner:'20th / 3AD / ABC',stage:'셋업 (파일럿 집필)',cert:55,region:'미국',type:'리메이크',
+       note:'ABC 피칭 완료, 셋업 단계. 파일럿 아웃라인 수정 중. 재개발 준비.',
+       phases:[{t:'dev',s:mo(2026,1),e:mo(2026,9),lb:'파일럿 아웃라인 → 대본'},{t:'pitch',s:mo(2026,9),e:mo(2027,3),lb:'ABC 재피칭',u:true},{t:'prod',s:mo(2027,6),e:mo(2028,6),lb:'파일럿 → 시리즈',u:true},{t:'air',s:mo(2028,9),e:mo(2028,12),lb:'방영',u:true}],
+       ms:[{m:mo(2026,9),c:'#BA7517'},{m:mo(2027,6),c:'#639922'},{m:mo(2028,9),c:'#9B4DCA'}],
+       pitch:'2026년 9월 (예측)',prod:'2027년 6월 (예측)',air:'2028년 9월 (예측)',
+       actions:['파일럿 아웃라인 수정 → ABC 재제출','신규 작가 태핑 검토'],issue:'ABC 탈락 후 재개발'},
+      {id:'hero',title:'히어로는 아닙니다만',partner:'20th / 3AD / Disney+',stage:'파일럿 대본 집필',cert:68,region:'미국',type:'리메이크',
+       note:'Matt Lambert 작가와 Disney+ 피칭 완료. Disney+ 구매 진행 중. 20th에서 작가 계약 진행 중.',
+       phases:[{t:'dev',s:mo(2026,1),e:mo(2026,8),lb:'파일럿 아웃라인 → 대본'},{t:'pitch',s:mo(2026,8),e:mo(2026,12),lb:'파일럿 EP'},{t:'prod',s:mo(2027,1),e:mo(2027,10),lb:'시리즈 편성 → 제작',u:true},{t:'air',s:mo(2027,10),e:mo(2027,12),lb:'Disney+ 방영',u:true}],
+       ms:[{m:mo(2026,8),c:'#378ADD'},{m:mo(2026,12),c:'#639922'},{m:mo(2027,10),c:'#9B4DCA'}],
+       pitch:'2026년 8월',prod:'2027년 1월 (예측)',air:'2027년 10월 (예측)',
+       actions:['작가 계약 후 파일럿 아웃라인 개발','Disney+ 제출 (Q2~Q3)'],issue:'파일럿 퀄리티가 편성 핵심 변수'},
+      {id:'itaewon',title:'이태원클라쓰',partner:'3AD / Hulu·FX',stage:'작가 매칭',cert:45,region:'미국',type:'리메이크',
+       note:'Bradley Brewdweg 작가 매칭 진행 중. 작가 매칭 후 피칭 문서 작업 예정.',
+       phases:[{t:'dev',s:mo(2026,1),e:mo(2026,7),lb:'작가 매칭 → 아웃라인'},{t:'pitch',s:mo(2026,7),e:mo(2027,1),lb:'플랫폼 피칭',u:true},{t:'prod',s:mo(2027,6),e:mo(2028,6),lb:'제작',u:true},{t:'air',s:mo(2028,6),e:mo(2028,9),lb:'방영',u:true}],
+       ms:[{m:mo(2026,7),c:'#BA7517'}],
+       pitch:'2026년 7월 (예측)',prod:'2027년 6월 (예측)',air:'2028년 6월 (예측)',
+       actions:['작가 최종 선정','피칭 문서 작업 착수'],issue:'작가 매칭 단계'},
+    ]},
+    {gid:'g2',label:'미국 — 공동제작 (wiip)',color:'#2E75B6',projects:[
+      {id:'hssdb',title:'힘쎈여자 도봉순 (애니)',partner:'Wiip / Disney+',stage:'피칭 → 협상',cert:70,region:'미국',type:'공동제작',
+       note:'Disney·Netflix·Amazon 피칭 완료. Amazon 불발. Disney/Netflix 회신 대기 중. 오퍼 수신 후 협상 예정.',
+       phases:[{t:'dev',s:mo(2026,1),e:mo(2026,6),lb:'Disney 협상 / 오퍼'},{t:'dev',s:mo(2026,6),e:mo(2026,12),lb:'스크립트 · 비주얼 덱'},{t:'pitch',s:mo(2026,11),e:mo(2027,3),lb:'Greenlit 확정'},{t:'prod',s:mo(2027,3),e:mo(2028,3),lb:'애니메이션 제작',u:true},{t:'air',s:mo(2028,3),e:mo(2028,6),lb:'Disney+ 방영',u:true}],
+       ms:[{m:mo(2026,4),c:'#BA7517'},{m:mo(2026,11),c:'#639922'},{m:mo(2028,3),c:'#9B4DCA'}],
+       pitch:'2026년 4~6월',prod:'2027년 3월 (예측)',air:'2028년 3월 (예측)',
+       actions:['오퍼 수신 후 협상 진행','편성 확정 즉시 개발 착수'],issue:'바이어 1개사 → 신속 클로징 필요'},
+      {id:'bargain',title:'몸값 (Bargain)',partner:'Wiip / Mark',stage:'스크립트 2고',cert:65,region:'미국',type:'공동제작',
+       note:'Jonas 감독 2고 집필 중. 집필료(약 1억) 지급 예정. 수정본 확인 후 투자사 피칭 여부 결정.',
+       phases:[{t:'dev',s:mo(2026,1),e:mo(2026,7),lb:'스크립트 2~3고'},{t:'pitch',s:mo(2026,7),e:mo(2026,12),lb:'투자사 피칭',u:true},{t:'prod',s:mo(2027,1),e:mo(2028,6),lb:'제작 → 후반',u:true},{t:'air',s:mo(2028,6),e:mo(2028,9),lb:'개봉',u:true}],
+       ms:[{m:mo(2026,7),c:'#378ADD'},{m:mo(2026,12),c:'#639922'},{m:mo(2028,6),c:'#9B4DCA'}],
+       pitch:'2026년 7월 (예측)',prod:'2027년 1월 (예측)',air:'2028년 6월 (예측)',
+       actions:['Jonas 2고 수령 후 피칭 여부 결정','Lorenzo 프로듀서 계약 합의'],issue:'집필료 추가 집행 필요'},
+      {id:'kichang',title:'기상청사람들',partner:'Wiip / Hope',stage:'계약 협의',cert:50,region:'미국',type:'공동제작',
+       note:'공동제작 계약 진행 중. 작가 요구 수준 높아 조율 중.',
+       phases:[{t:'dev',s:mo(2026,1),e:mo(2026,8),lb:'계약 → 작가 착수',u:true},{t:'dev',s:mo(2026,8),e:mo(2027,8),lb:'스크립트 개발',u:true},{t:'pitch',s:mo(2027,8),e:mo(2028,2),lb:'플랫폼 피칭',u:true},{t:'prod',s:mo(2028,4),e:mo(2029,4),lb:'제작',u:true},{t:'air',s:mo(2029,4),e:mo(2029,7),lb:'방영',u:true}],
+       ms:[{m:mo(2026,8),c:'#378ADD'}],
+       pitch:'2027년 8월 (예측)',prod:'2028년 4월 (예측)',air:'2029년 4월 (예측)',
+       actions:['공동제작 계약 Q2 완료','집필 착수'],issue:'계약 조율 중'},
+      {id:'guemul',title:'괴물 (Beyond Evil)',partner:'Wiip / Hope',stage:'계약 협의',cert:45,region:'미국',type:'공동제작',
+       note:'공동제작 계약 체결 필요. 인도 Applause 딜 제약사항 확인 필요.',
+       phases:[{t:'dev',s:mo(2026,1),e:mo(2026,6),lb:'계약 → 작가 서칭'},{t:'dev',s:mo(2026,6),e:mo(2027,6),lb:'스크립트 개발',u:true},{t:'pitch',s:mo(2027,6),e:mo(2027,12),lb:'피칭',u:true},{t:'prod',s:mo(2028,3),e:mo(2029,3),lb:'제작',u:true},{t:'air',s:mo(2029,3),e:mo(2029,6),lb:'방영',u:true}],
+       ms:[{m:mo(2026,6),c:'#378ADD'}],
+       pitch:'2027년 6월 (예측)',prod:'2028년 3월 (예측)',air:'2029년 3월 (예측)',
+       actions:['공동제작 계약 체결','인도 딜 제약사항 확인'],issue:'인도 Applause 옵션 제약사항 미확인'},
+      {id:'jaebeol',title:'재벌집 막내아들',partner:'Wiip / Mark',stage:'계약 협의',cert:50,region:'미국',type:'공동제작',
+       note:'아티스트컴퍼니 MOU 초안 완료. 체결식 여부 확인 필요.',
+       phases:[{t:'dev',s:mo(2026,1),e:mo(2026,5),lb:'MOU → 계약'},{t:'dev',s:mo(2026,5),e:mo(2027,5),lb:'작가 → 파일럿 대본',u:true},{t:'pitch',s:mo(2027,5),e:mo(2027,11),lb:'패키징 피칭',u:true},{t:'prod',s:mo(2028,3),e:mo(2029,3),lb:'제작',u:true},{t:'air',s:mo(2029,3),e:mo(2029,6),lb:'방영',u:true}],
+       ms:[{m:mo(2026,5),c:'#378ADD'}],
+       pitch:'2027년 5월 (예측)',prod:'2028년 3월 (예측)',air:'2029년 3월 (예측)',
+       actions:['아티스트컴퍼니 MOU 체결','공동제작 계약 후 작가 서칭'],issue:'아컴 체결식 일정 미확정'},
+    ]},
+    {gid:'g3',label:'미국 — 기타 공동제작',color:'#2E75B6',projects:[
+      {id:'king',title:'킹더랜드',partner:'TCC / Netflix US',stage:'쇼러너 매칭',cert:48,region:'미국',type:'공동제작',
+       note:'쇼러너 미팅 진행 중. 선정 후 피칭 문서 수정 → 플랫폼 피칭.',
+       phases:[{t:'dev',s:mo(2026,1),e:mo(2026,6),lb:'쇼러너 확정 → 피칭 문서'},{t:'pitch',s:mo(2026,6),e:mo(2027,1),lb:'Netflix 피칭',u:true},{t:'prod',s:mo(2027,6),e:mo(2028,6),lb:'제작',u:true},{t:'air',s:mo(2028,6),e:mo(2028,9),lb:'방영',u:true}],
+       ms:[{m:mo(2026,6),c:'#BA7517'}],
+       pitch:'2026년 6월 (예측)',prod:'2027년 6월 (예측)',air:'2028년 6월 (예측)',
+       actions:['쇼러너 최종 선정','Netflix 피칭'],issue:'쇼러너 매칭 중'},
+    ]},
+    {gid:'g4',label:'캐나다 — CAPCA 4개 프로젝트',color:'#C63030',projects:[
+      {id:'benojo',title:'CAPCA — Benjamin Ojo',partner:'Little Engine',stage:'기획개발',cert:58,region:'캐나다',type:'CAPCA',
+       note:'쇼러너 미팅 순차 진행 중. 확정 후 피칭 플랫폼 조율 예정.',
+       phases:[{t:'dev',s:mo(2026,1),e:mo(2026,8),lb:'쇼러너 선정 → 기획안'},{t:'pitch',s:mo(2026,8),e:mo(2027,2),lb:'글로벌 OTT 피칭',u:true},{t:'prod',s:mo(2027,5),e:mo(2028,5),lb:'제작',u:true},{t:'air',s:mo(2028,5),e:mo(2028,8),lb:'방영',u:true}],
+       ms:[{m:mo(2026,7),c:'#378ADD'},{m:mo(2026,8),c:'#BA7517'}],
+       pitch:'2026년 8월 (예측)',prod:'2027년 5월 (예측)',air:'2028년 5월 (예측)',
+       actions:['쇼러너 미팅 순차 진행','확정 후 피칭 플랫폼 조율'],issue:'쇼러너 미확정'},
+      {id:'eor',title:'CAPCA — Edge of Rivalry',partner:'Life Sketch Media',stage:'기획개발',cert:45,region:'캐나다',type:'CAPCA',
+       note:'wiip과 공동 진행 여부 결정 예정. 쇼러너 서칭 중.',
+       phases:[{t:'dev',s:mo(2026,1),e:mo(2026,9),lb:'기획개발 → 쇼러너'},{t:'pitch',s:mo(2026,9),e:mo(2027,3),lb:'Netflix 피칭',u:true},{t:'prod',s:mo(2027,9),e:mo(2028,9),lb:'제작',u:true}],
+       ms:[],pitch:'2026년 9월 (예측)',prod:'2027년 9월 (예측)',air:'2028년 9월 (예측)',
+       actions:['wiip 공동 진행 여부 결정','쇼러너 서칭 착수'],issue:'wiip 협업 여부 미결정'},
+      {id:'greens',title:'CAPCA — Greens',partner:'Goyangi',stage:'기획개발',cert:42,region:'캐나다',type:'CAPCA',
+       note:'쇼러너 리스트업 중. Creative BC 집필료 지원 신청 예정.',
+       phases:[{t:'dev',s:mo(2026,1),e:mo(2026,9),lb:'쇼러너 매칭 → 기획안'},{t:'pitch',s:mo(2026,9),e:mo(2027,4),lb:'캐나다 채널 피칭',u:true},{t:'prod',s:mo(2027,9),e:mo(2028,9),lb:'제작',u:true}],
+       ms:[],pitch:'2026년 9월 (예측)',prod:'2027년 9월 (예측)',air:'2028년 9월 (예측)',
+       actions:['Creative BC 집필료 지원 신청','쇼러너 매칭 확정'],issue:'예산 및 쇼러너 미확정'},
+      {id:'gooddet',title:'CAPCA — Good Detective',partner:'TCC / Veena Sud',stage:'기획개발',cert:52,region:'캐나다',type:'CAPCA',
+       note:'Creative BC 집필료 지원 신청 예정. Veena Sud 쇼러너 태핑 중.',
+       phases:[{t:'dev',s:mo(2026,1),e:mo(2026,8),lb:'작가 계약 → 파일럿'},{t:'pitch',s:mo(2026,8),e:mo(2027,2),lb:'피칭 (Veena Sud)',u:true},{t:'prod',s:mo(2027,7),e:mo(2028,7),lb:'제작',u:true},{t:'air',s:mo(2028,7),e:mo(2028,10),lb:'방영',u:true}],
+       ms:[{m:mo(2026,7),c:'#378ADD'},{m:mo(2026,8),c:'#BA7517'}],
+       pitch:'2026년 8월 (예측)',prod:'2027년 7월 (예측)',air:'2028년 7월 (예측)',
+       actions:['Creative BC 지원 항목 RESO 제출','Veena Sud 쇼러너 계약'],issue:'Creative BC 지원 구조 확정 필요'},
+    ]},
+    {gid:'g5',label:'캐나다 — 서울팰리스',color:'#C63030',projects:[
+      {id:'seoul',title:'서울팰리스',partner:'Banger Film / 보더리스',stage:'기획개발 패키징',cert:72,region:'캐나다',type:'공동제작',
+       note:'1~3부 수정고 수령. 4부 번역 중. 5부 집필 중. 캐스팅 태핑 중. wiip 통해 HBO·Amazon 태핑 중.',
+       phases:[{t:'dev',s:mo(2026,1),e:mo(2026,6),lb:'대본 각색 · 계약 체결'},{t:'dev',s:mo(2026,6),e:mo(2026,10),lb:'캐스팅 / Pre-Prod'},{t:'prod',s:mo(2026,10),e:mo(2027,6),lb:'촬영 · 후반',u:true},{t:'air',s:mo(2027,6),e:mo(2027,9),lb:'HBO/Amazon 방영',u:true}],
+       ms:[{m:mo(2026,5),c:'#378ADD'},{m:mo(2026,10),c:'#639922'},{m:mo(2027,6),c:'#9B4DCA'}],
+       pitch:'HBO/Amazon 태핑 중',prod:'2026년 10월 (예측)',air:'2027년 6월 (예측)',
+       actions:['뱅어와 공동제작 딜텀 체결','캐스팅 확정 후 예산 재정비'],issue:'캐스팅 따라 예산 재정비 필요'},
+    ]},
+  ];
+}
+
+let GROUPS=loadData();
+let UPDATES=loadUpdData();
+let COSTS=loadCostData();
+
+// ── UTIL ──────────────────────────────────────────────────────────
+function uid(){return 'p'+Date.now().toString(36)+Math.random().toString(36).slice(2,5)}
+function certInfo(n){
+  if(n>=65) return{t:'높음',c:'#1A7A43',bg:'#D4EDDA'};
+  if(n>=50) return{t:'보통',c:'#8B5A00',bg:'#FFF3CD'};
+  return{t:'낮음',c:'#8B1A1A',bg:'#FDECEA'};
+}
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2200);
+}
+function allProjects(){return GROUPS.flatMap(g=>g.projects)}
+
+// ── EDIT MODE ─────────────────────────────────────────────────────
+function toggleEditMode(){
+  editMode=!editMode;
+  document.body.classList.toggle('edit-mode',editMode);
+  const btn=document.getElementById('editModeBtn');
+  btn.classList.toggle('active',editMode);
+  btn.textContent=editMode?'✅ 편집 중':'✏️ 편집 모드';
+  document.getElementById('add-group-wrap').style.display=editMode?'':'none';
+}
+
+// ── TIMELINE ─────────────────────────────────────────────────────
+function buildTimeline(){
+  const root=document.getElementById('tl-root');
+  root.innerHTML='';
+  GROUPS.forEach(g=>{
+    const gw=document.createElement('div');
+    gw.className='group-wrap';
+    gw.dataset.gid=g.gid;
+
+    const glr=document.createElement('div');
+    glr.className='group-label-row';
+    const gl=document.createElement('div');
+    gl.className='group-label';
+    gl.textContent=g.label;
+    glr.appendChild(gl);
+    const geBtn=document.createElement('button');
+    geBtn.className='group-edit-btn';
+    geBtn.textContent='그룹 수정';
+    geBtn.onclick=(e)=>{e.stopPropagation();openGroupModal(g.gid)};
+    glr.appendChild(geBtn);
+    gw.appendChild(glr);
+
+    const scroll=document.createElement('div');
+    scroll.className='tl-scroll';
+    const wrap=document.createElement('div');
+    wrap.className='tl-wrap';
+
+    // header row
+    const head=document.createElement('div');
+    head.className='tl-head';
+    const lbl=document.createElement('div');
+    lbl.className='tl-lbl';
+    lbl.textContent='프로젝트';
+    head.appendChild(lbl);
+    const cols=document.createElement('div');
+    cols.className='tl-cols';
+    for(let y=2026;y<=2029;y++){
+      const yb=document.createElement('div');
+      yb.className='tl-yr';
+      yb.style.cssText=`flex:0 0 ${12*MW}px`;
+      const yn=document.createElement('div');
+      yn.className='tl-yname';
+      yn.textContent=y+'년';
+      yb.appendChild(yn);
+      const mr=document.createElement('div');
+      mr.className='tl-months';
+      for(let m=1;m<=12;m++){
+        const ml=document.createElement('div');
+        ml.className='tl-m'+(y===2026&&m===4?' now':'');
+        ml.textContent=m;
+        mr.appendChild(ml);
+      }
+      yb.appendChild(mr);
+      cols.appendChild(yb);
+    }
+    head.appendChild(cols);
+    wrap.appendChild(head);
+
+    g.projects.forEach(p=>{
+      wrap.appendChild(makeProjectRow(p,g));
+    });
+
+    scroll.appendChild(wrap);
+    gw.appendChild(scroll);
+
+    const addBtn=document.createElement('button');
+    addBtn.className='add-proj-btn';
+    addBtn.textContent='+ 프로젝트 추가';
+    addBtn.onclick=()=>openProjModal(null,g.gid);
+    gw.appendChild(addBtn);
+
+    root.appendChild(gw);
+  });
+}
+
+function makeProjectRow(p,g){
+  const rowWrap=document.createElement('div');
+
+  const row=document.createElement('div');
+  row.className='tl-row';
+  row.id='row-'+p.id;
+
+  // label cell
+  const cell=document.createElement('div');
+  cell.className='tl-cell';
+  const cl=certInfo(p.cert);
+  cell.innerHTML=`<div class="tl-ptitle">${p.title}</div>
+<div class="tl-psub">
+  <div class="rdot" style="background:${g.color}"></div>
+  <span>${p.partner.split('/')[0].trim()}</span>
+  <span class="cert" style="background:${cl.bg};color:${cl.c}">${p.cert}%</span>
+</div>`;
+
+  // edit/delete buttons (visible in edit mode on hover)
+  const ra=document.createElement('div');
+  ra.className='row-actions';
+  const eb=document.createElement('button');
+  eb.className='row-btn edit';
+  eb.textContent='수정';
+  eb.onclick=(e)=>{e.stopPropagation();openProjModal(p.id,g.gid)};
+  const db=document.createElement('button');
+  db.className='row-btn del';
+  db.textContent='삭제';
+  db.onclick=(e)=>{e.stopPropagation();if(confirm(`"${p.title}" 프로젝트를 삭제할까요?`)){deleteProjectDirect(p.id,g.gid)}};
+  ra.appendChild(eb);
+  ra.appendChild(db);
+  cell.appendChild(ra);
+  row.appendChild(cell);
+
+  // bars cell
+  const bars=document.createElement('div');
+  bars.className='tl-bars';
+  const nv=document.createElement('div');
+  nv.className='now-v';
+  nv.style.left=(3*MW+MW/2)+'px';
+  bars.appendChild(nv);
+  p.phases.forEach(ph=>{
+    const b=document.createElement('div');
+    b.className='bar';
+    b.style.cssText=`left:${ph.s*MW}px;width:${(ph.e-ph.s)*MW}px;background:${PC[ph.t]||'#888'};opacity:${ph.u?0.48:1}`;
+    const sp=document.createElement('span');
+    sp.className='bl';
+    sp.style.color='#fff';
+    sp.textContent=ph.lb;
+    b.appendChild(sp);
+    bars.appendChild(b);
+  });
+  p.ms&&p.ms.forEach(ms=>{
+    const d=document.createElement('div');
+    d.className='mdot';
+    d.style.cssText=`left:${ms.m*MW+MW/2-4}px;background:${ms.c}`;
+    bars.appendChild(d);
+  });
+  row.appendChild(bars);
+
+  // click to open detail (but not in edit mode on label)
+  row.onclick=()=>{if(!editMode)toggleDet(p,rowWrap,detRow)};
+  rowWrap.appendChild(row);
+
+  const detRow=document.createElement('div');
+  detRow.className='det-row';
+  rowWrap.appendChild(detRow);
+
+  return rowWrap;
+}
+
+function toggleDet(p,wrap,detRow){
+  const existing=document.querySelector('.det-row.open');
+  if(existing&&existing!==detRow){existing.classList.remove('open')}
+  if(openTLId===p.id){detRow.classList.remove('open');openTLId=null;return;}
+  openTLId=p.id;
+  const cl=certInfo(p.cert);
+  const acts=(p.actions||[]).map(a=>`<div class="act-item">${a}</div>`).join('');
+  const det=document.createElement('div');
+  det.className='det-cell';
+  det.innerHTML=`<div class="det-grid">
+  <span class="dk">피칭 시점</span><span class="dv">${p.pitch||'TBD'}</span>
+  <span class="dk">제작 확정</span><span class="dv">${p.prod||'TBD'}</span>
+  <span class="dk">방영/개봉</span><span class="dv">${p.air||'TBD'}</span>
+  <span class="dk">현황</span><span class="dv">${p.note||''}</span>
+  ${p.issue?`<span class="dk">이슈</span><span class="dv" style="color:#8B1A1A">⚠ ${p.issue}</span>`:''}
+</div>
+${acts?`<div class="det-acts"><div class="det-act-t">즉시 액션</div>${acts}</div>`:''}`;
+  detRow.innerHTML='';
+  detRow.appendChild(det);
+  detRow.classList.add('open');
+  setTimeout(()=>detRow.scrollIntoView({behavior:'smooth',block:'nearest'}),50);
+}
+
+// ── PROJECT MODAL ─────────────────────────────────────────────────
+function openProjModal(pid,gid){
+  document.getElementById('pm-gid').value=gid||'';
+  document.getElementById('pm-pid').value=pid||'';
+  const isEdit=!!pid;
+  document.getElementById('proj-modal-title').textContent=isEdit?'프로젝트 수정':'프로젝트 추가';
+  document.getElementById('pm-delete-btn').style.display=isEdit?'':'none';
+
+  const p=isEdit?allProjects().find(x=>x.id===pid):null;
+  document.getElementById('pm-title').value=p?.title||'';
+  document.getElementById('pm-partner').value=p?.partner||'';
+  document.getElementById('pm-stage').value=p?.stage||'';
+  document.getElementById('pm-region').value=p?.region||'미국';
+  document.getElementById('pm-cert').value=p?.cert||60;
+  document.getElementById('pm-type').value=p?.type||'공동제작';
+  document.getElementById('pm-note').value=p?.note||'';
+  document.getElementById('pm-pitch').value=p?.pitch||'';
+  document.getElementById('pm-prod').value=p?.prod||'';
+  document.getElementById('pm-air').value=p?.air||'';
+  document.getElementById('pm-issue').value=p?.issue||'';
+  document.getElementById('pm-actions').value=(p?.actions||[]).join('\n');
+
+  // phases
+  const pl=document.getElementById('phase-list');
+  pl.innerHTML='';
+  (p?.phases||[]).forEach(ph=>addPhaseRow(ph));
+
+  document.getElementById('projModal').classList.add('open');
+}
+
+function closeProjModal(){document.getElementById('projModal').classList.remove('open')}
+
+function addPhaseRow(ph){
+  const pl=document.getElementById('phase-list');
+  const div=document.createElement('div');
+  div.className='phase-item';
+  const sy=ph?SY+Math.floor(ph.s/12):2026;
+  const sm=ph?ph.s%12+1:1;
+  const ey=ph?SY+Math.floor(ph.e/12):2026;
+  const em=ph?ph.e%12+1:6;
+  div.innerHTML=`
+  <select class="ph-type">
+    <option value="dev" ${ph?.t==='dev'?'selected':''}>dev 개발</option>
+    <option value="pitch" ${ph?.t==='pitch'?'selected':''}>pitch 피칭</option>
+    <option value="prod" ${ph?.t==='prod'?'selected':''}>prod 제작</option>
+    <option value="air" ${ph?.t==='air'?'selected':''}>air 방영</option>
+  </select>
+  <input class="ph-lb" type="text" value="${ph?.lb||''}" placeholder="라벨">
+  <input class="ph-sy" type="number" value="${sy}" min="2026" max="2030" style="width:50px">
+  <input class="ph-sm" type="number" value="${sm}" min="1" max="12" style="width:44px">
+  <input class="ph-ey" type="number" value="${ey}" min="2026" max="2030" style="width:50px">
+  <input class="ph-em" type="number" value="${em}" min="1" max="12" style="width:44px">
+  <button class="ph-del" onclick="this.closest('.phase-item').remove()">✕</button>`;
+  pl.appendChild(div);
+}
+
+function saveProject(){
+  const gid=document.getElementById('pm-gid').value;
+  const pid=document.getElementById('pm-pid').value;
+  const title=document.getElementById('pm-title').value.trim();
+  if(!title){alert('프로젝트명을 입력해주세요.');return;}
+
+  const phases=[];
+  document.querySelectorAll('#phase-list .phase-item').forEach(row=>{
+    const t=row.querySelector('.ph-type').value;
+    const lb=row.querySelector('.ph-lb').value.trim()||t;
+    const sy=parseInt(row.querySelector('.ph-sy').value);
+    const sm=parseInt(row.querySelector('.ph-sm').value);
+    const ey=parseInt(row.querySelector('.ph-ey').value);
+    const em=parseInt(row.querySelector('.ph-em').value);
+    phases.push({t,lb,s:mo(sy,sm),e:mo(ey,em)});
+  });
+
+  const pData={
+    id:pid||uid(),
+    title,
+    partner:document.getElementById('pm-partner').value.trim(),
+    stage:document.getElementById('pm-stage').value.trim(),
+    region:document.getElementById('pm-region').value,
+    cert:parseInt(document.getElementById('pm-cert').value)||60,
+    type:document.getElementById('pm-type').value,
+    note:document.getElementById('pm-note').value.trim(),
+    pitch:document.getElementById('pm-pitch').value.trim(),
+    prod:document.getElementById('pm-prod').value.trim(),
+    air:document.getElementById('pm-air').value.trim(),
+    issue:document.getElementById('pm-issue').value.trim(),
+    actions:document.getElementById('pm-actions').value.split('\n').map(s=>s.trim()).filter(Boolean),
+    phases,ms:[],
+  };
+
+  const g=GROUPS.find(x=>x.gid===gid);
+  if(!g){alert('그룹을 찾을 수 없습니다.');return;}
+  if(pid){
+    const idx=g.projects.findIndex(x=>x.id===pid);
+    if(idx>=0)g.projects[idx]=pData;
+  } else {
+    g.projects.push(pData);
+  }
+  saveData();
+  closeProjModal();
+  openTLId=null;
+  buildTimeline();
+  showToast(pid?'프로젝트가 수정되었습니다':'프로젝트가 추가되었습니다');
+}
+
+function deleteProject(){
+  const pid=document.getElementById('pm-pid').value;
+  const gid=document.getElementById('pm-gid').value;
+  if(!confirm('프로젝트를 삭제할까요?'))return;
+  deleteProjectDirect(pid,gid);
+  closeProjModal();
+}
+function deleteProjectDirect(pid,gid){
+  const g=GROUPS.find(x=>x.gid===gid);
+  if(g){g.projects=g.projects.filter(x=>x.id!==pid)}
+  saveData();
+  openTLId=null;
+  buildTimeline();
+  showToast('삭제되었습니다');
+}
+
+// ── GROUP MODAL ───────────────────────────────────────────────────
+function openGroupModal(gid){
+  const isEdit=!!gid;
+  document.getElementById('gm-gid').value=gid||'';
+  document.getElementById('gm-title').textContent=isEdit?'그룹 수정':'그룹 추가';
+  document.getElementById('gm-delete-btn').style.display=isEdit?'':'none';
+  const g=isEdit?GROUPS.find(x=>x.gid===gid):null;
+  document.getElementById('gm-label').value=g?.label||'';
+  document.getElementById('gm-color').value=g?.color||'#2E75B6';
+  document.getElementById('groupModal').classList.add('open');
+}
+function closeGroupModal(){document.getElementById('groupModal').classList.remove('open')}
+function saveGroup(){
+  const gid=document.getElementById('gm-gid').value;
+  const label=document.getElementById('gm-label').value.trim();
+  const color=document.getElementById('gm-color').value;
+  if(!label){alert('그룹 이름을 입력해주세요.');return;}
+  if(gid){
+    const g=GROUPS.find(x=>x.gid===gid);
+    if(g){g.label=label;g.color=color;}
+  } else {
+    GROUPS.push({gid:'g'+Date.now(),label,color,projects:[]});
+  }
+  saveData();
+  closeGroupModal();
+  buildTimeline();
+  showToast(gid?'그룹이 수정되었습니다':'그룹이 추가되었습니다');
+}
+function deleteGroup(){
+  const gid=document.getElementById('gm-gid').value;
+  const g=GROUPS.find(x=>x.gid===gid);
+  if(g&&g.projects.length>0){if(!confirm(`그룹 안에 프로젝트 ${g.projects.length}개가 있습니다. 모두 삭제할까요?`))return;}
+  if(!confirm('그룹을 삭제할까요?'))return;
+  GROUPS=GROUPS.filter(x=>x.gid!==gid);
+  saveData();
+  closeGroupModal();
+  buildTimeline();
+  showToast('그룹이 삭제되었습니다');
+}
+
+// ── UPDATES ──────────────────────────────────────────────────────
+let UPD_FILTER='all';
+
+function loadUpdData(){
+  try{const s=localStorage.getItem('sll_upd');if(s)return JSON.parse(s);}catch(e){}
+  return getDefaultUpdates();
+}
+function saveUpdData(){try{localStorage.setItem('sll_upd',JSON.stringify(UPDATES));}catch(e){}}
+
+function getDefaultUpdates(){
+  return [
+    {date:'2026-04-22',items:[
+      {iid:'u1',type:'update',pid:'seoul',proj:'서울팰리스',region:'캐나다',status:'1~3부 수정고 및 번역본 수령 완료. 4부 번역 진행 중. 5부 집필 착수.',next:'뱅어와 공동제작 딜텀 체결 예정. 캐스팅 태핑 병행.'},
+      {iid:'u2',type:'update',pid:'hssdb',proj:'힘쎈여자 도봉순',region:'미국',status:'Disney·Netflix·Amazon 피칭 완료. Amazon 불발. Disney/Netflix 회신 대기 중.',next:'오퍼 수신 후 협상 착수.'},
+      {iid:'u3',type:'decision',pid:'',proj:'',region:'공통',decTitle:'힘쎈여자 도봉순 — Disney 오퍼 수락 및 협상 방향',status:'Disney에서 co-studio 조건 미인정 상태로 오퍼 예상. 업계 최초 구조인 만큼 SLL 입장 정리 필요.',next:'오퍼 수신 후 수락 여부 및 협상 카드 방향 결정 요청',deadline:'2026년 5월 초'},
+    ]},
+    {date:'2026-04-08',items:[
+      {iid:'u4',type:'update',pid:'dcj-us',proj:'닥터차정숙 (미국)',region:'미국',status:'ABC 파일럿 라운드 탈락. 재개발 방향 결정.',next:'파일럿 아웃라인 수정 완료 후 ABC 재제출.'},
+      {iid:'u5',type:'update',pid:'hero',proj:'히어로는 아닙니다만',region:'미국',status:'Matt Lambert 작가와 Disney+ 피칭 완료(11/7). 20th 작가 계약 진행 중.',next:'작가 계약 후 파일럿 아웃라인 개발.'},
+      {iid:'u6',type:'decision',pid:'',proj:'',region:'공통',decTitle:'재벌집 막내아들 — 중·일 권리 포함 여부',status:'아티스트컴퍼니는 중·일 권리 제외 요청. wiip은 미국 피칭 시 타국가 홀딩 요청. 내부 방침 결정 필요.',next:'아컴 MOU 체결 전 중·일 권리 포함/제외 결정 요청',deadline:'2026년 4월 말'},
+    ]},
+  ];
+}
+
+function buildUpdates(){
+  const root=document.getElementById('upd-root');
+  root.innerHTML='';
+  let displayed=UPDATES.filter(u=>{
+    if(UPD_FILTER==='all')return true;
+    if(UPD_FILTER==='decision')return u.items.some(i=>i.type==='decision');
+    return u.items.some(i=>i.region===UPD_FILTER||i.type==='decision');
+  });
+  if(!displayed.length){
+    root.innerHTML='<div style="color:var(--textmut);padding:24px;text-align:center">업데이트 내용이 없습니다.</div>';
+    return;
+  }
+  displayed.forEach(entry=>{
+    const items=UPD_FILTER==='all'?entry.items
+      :UPD_FILTER==='decision'?entry.items.filter(i=>i.type==='decision')
+      :entry.items.filter(i=>i.region===UPD_FILTER||i.type==='decision');
+    if(!items.length)return;
+    const decCount=items.filter(i=>i.type==='decision').length;
+    const updCount=items.filter(i=>i.type!=='decision').length;
+    const d=new Date(entry.date);
+    const ds=d.getFullYear()+'년 '+(d.getMonth()+1)+'월 '+d.getDate()+'일';
+    const card=document.createElement('div');
+    card.style.cssText='background:var(--white);border:0.5px solid var(--bdr);border-radius:10px;margin-bottom:14px;overflow:hidden';
+    const hd=document.createElement('div');
+    hd.style.cssText='padding:10px 16px;background:var(--bg);display:flex;align-items:center;justify-content:space-between;border-bottom:0.5px solid var(--bdrlt)';
+    const dateStr=entry.date;
+    hd.innerHTML='<div style="display:flex;align-items:center;gap:10px">'
+      +'<span style="font-size:13px;font-weight:600;color:var(--navy)">'+ds+'</span>'
+      +(decCount?'<span style="font-size:10px;font-weight:600;padding:2px 8px;border-radius:10px;background:#FDECEA;color:#8B1A1A">🔴 의사결정 '+decCount+'건</span>':'')
+      +(updCount?'<span style="font-size:10px;color:var(--textmut)">업데이트 '+updCount+'건</span>':'')
+      +'</div>'
+      +'<div style="display:flex;gap:6px">'
+      +'<button onclick="openUpdItemModal(null,\''+dateStr+'\')" style="font-size:11px;padding:3px 10px;border-radius:7px;border:0.5px solid var(--bdr);background:var(--white);color:var(--textsub);cursor:pointer">+ 항목 추가</button>'
+      +'<button onclick="deleteUpdDate(\''+dateStr+'\')" style="font-size:11px;padding:3px 8px;border-radius:7px;border:none;background:var(--redbg);color:var(--red);cursor:pointer">날짜 삭제</button>'
+      +'</div>';
+    card.appendChild(hd);
+
+    const decItems=items.filter(i=>i.type==='decision');
+    const updItems=items.filter(i=>i.type!=='decision');
+
+    if(decItems.length){
+      const sec=document.createElement('div');
+      sec.style.cssText='padding:12px 14px;background:#FEF8F8;border-bottom:0.5px solid #FDECEA;display:flex;flex-direction:column;gap:10px';
+      decItems.forEach(item=>{
+        const iid=item.iid;
+        const div=document.createElement('div');
+        div.style.cssText='background:var(--white);border:1px solid #FDECEA;border-left:4px solid #DC3545;border-radius:8px;padding:12px 14px';
+        div.innerHTML='<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px">'
+          +'<div style="flex:1">'
+          +'<div style="display:flex;align-items:center;gap:8px;margin-bottom:7px">'
+          +'<span style="font-size:11px;font-weight:700;padding:2px 8px;border-radius:10px;background:#FDECEA;color:#8B1A1A">🔴 대표님 의사결정 필요</span>'
+          +(item.deadline?'<span style="font-size:10px;color:#8B1A1A;font-weight:500">⏰ '+item.deadline+'</span>':'')
+          +'</div>'
+          +'<div style="font-size:13px;font-weight:600;color:var(--navy);margin-bottom:5px">'+(item.decTitle||'')+'</div>'
+          +'<div style="font-size:12px;color:var(--textsub);line-height:1.6;margin-bottom:6px">'+item.status+'</div>'
+          +(item.next?'<div style="font-size:12px;font-weight:500;color:#8B1A1A;padding:6px 10px;background:#FDECEA;border-radius:5px">→ '+item.next+'</div>':'')
+          +'</div>'
+          +'<button onclick="openUpdItemModal(\''+iid+'\',\''+dateStr+'\')" style="font-size:10px;padding:3px 9px;border-radius:6px;border:0.5px solid var(--bdr);background:var(--white);color:var(--textsub);cursor:pointer;flex-shrink:0">수정</button>'
+          +'</div>';
+        sec.appendChild(div);
+      });
+      card.appendChild(sec);
+    }
+
+    if(updItems.length){
+      const sec=document.createElement('div');
+      sec.style.cssText='padding:10px 14px;display:flex;flex-direction:column;gap:8px';
+      updItems.forEach(item=>{
+        const iid=item.iid;
+        const rc=item.region==='미국'?'#2E75B6':'#C63030';
+        const div=document.createElement('div');
+        div.style.cssText='display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border-radius:7px;background:var(--bg)';
+        div.innerHTML='<span style="font-size:11px;font-weight:600;color:#fff;padding:2px 9px;border-radius:10px;background:'+rc+';flex-shrink:0;white-space:nowrap">'+item.proj+'</span>'
+          +'<div style="flex:1">'
+          +'<p style="font-size:12px;color:var(--text);line-height:1.5">'+item.status+'</p>'
+          +(item.next?'<p style="font-size:11px;color:var(--textsub);margin-top:3px">→ '+item.next+'</p>':'')
+          +'</div>'
+          +'<button onclick="openUpdItemModal(\''+iid+'\',\''+dateStr+'\')" style="font-size:10px;padding:3px 9px;border-radius:6px;border:0.5px solid var(--bdr);background:var(--white);color:var(--textsub);cursor:pointer;flex-shrink:0">수정</button>';
+        sec.appendChild(div);
+      });
+      card.appendChild(sec);
+    }
+    root.appendChild(card);
+  });
+}
+
+function filterUpd(f,btn){
+  UPD_FILTER=f;
+  document.querySelectorAll('.upd-period-btn').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  buildUpdates();
+}
+
+function openUpdDateModal(){
+  document.getElementById('udd-date').value=new Date().toISOString().split('T')[0];
+  document.getElementById('updDateModal').classList.add('open');
+}
+function saveUpdDate(){
+  const date=document.getElementById('udd-date').value;
+  if(!date)return;
+  if(!UPDATES.find(u=>u.date===date)){
+    UPDATES.unshift({date,items:[]});
+    UPDATES.sort((a,b)=>b.date.localeCompare(a.date));
+    saveUpdData();
+  }
+  document.getElementById('updDateModal').classList.remove('open');
+  buildUpdates();
+  showToast('날짜가 추가되었습니다');
+}
+function deleteUpdDate(date){
+  if(!confirm('이 날짜의 모든 업데이트를 삭제할까요?'))return;
+  UPDATES=UPDATES.filter(u=>u.date!==date);
+  saveUpdData();
+  buildUpdates();
+  showToast('삭제되었습니다');
+}
+
+function openUpdItemModal(iid,date){
+  const sel=document.getElementById('uim-proj');
+  sel.innerHTML='';
+  allProjects().forEach(p=>{
+    const opt=document.createElement('option');
+    opt.value=p.id; opt.textContent=p.title; sel.appendChild(opt);
+  });
+  document.getElementById('uim-date').value=date;
+  document.getElementById('uim-iid').value=iid||'';
+  document.getElementById('uim-del-btn').style.display=iid?'':'none';
+  const entry=UPDATES.find(u=>u.date===date);
+  const item=iid?entry&&entry.items.find(i=>i.iid===iid):null;
+  document.getElementById('uim-title').textContent=iid?'항목 수정':'항목 추가';
+  document.getElementById('uim-type').value=item?item.type:'update';
+  if(item&&item.pid) document.getElementById('uim-proj').value=item.pid;
+  document.getElementById('uim-dec-title').value=item?item.decTitle||'':'';
+  document.getElementById('uim-status').value=item?item.status||'':'';
+  document.getElementById('uim-next').value=item?item.next||'':'';
+  document.getElementById('uim-deadline').value=item?item.deadline||'':'';
+  toggleUpdItemType();
+  document.getElementById('updItemModal').classList.add('open');
+}
+
+function toggleUpdItemType(){
+  const t=document.getElementById('uim-type').value;
+  const isDec=t==='decision';
+  document.getElementById('uim-proj-row').style.display=isDec?'none':'';
+  document.getElementById('uim-dec-title-row').style.display=isDec?'':'none';
+  document.getElementById('uim-deadline-row').style.display=isDec?'':'none';
+  document.getElementById('uim-status-label').textContent=isDec?'배경 설명':'현황 업데이트';
+  document.getElementById('uim-next').placeholder=isDec?'대표님께 요청하는 내용':'향후 계획';
+}
+
+function saveUpdItem(){
+  const date=document.getElementById('uim-date').value;
+  const iid=document.getElementById('uim-iid').value;
+  const type=document.getElementById('uim-type').value;
+  const status=document.getElementById('uim-status').value.trim();
+  if(!status){alert('내용을 입력해주세요.');return;}
+  let item;
+  if(type==='decision'){
+    item={iid:iid||'i'+Date.now(),type:'decision',pid:'',proj:'',region:'공통',
+      decTitle:document.getElementById('uim-dec-title').value.trim(),
+      status,next:document.getElementById('uim-next').value.trim(),
+      deadline:document.getElementById('uim-deadline').value.trim()};
+  } else {
+    const pid=document.getElementById('uim-proj').value;
+    const p=allProjects().find(x=>x.id===pid);
+    item={iid:iid||'i'+Date.now(),type:'update',pid,proj:p?p.title:pid,region:p?p.region:'미국',
+      status,next:document.getElementById('uim-next').value.trim()};
+  }
+  const entry=UPDATES.find(u=>u.date===date);
+  if(entry){
+    if(iid){const idx=entry.items.findIndex(i=>i.iid===iid);if(idx>=0)entry.items[idx]=item;else entry.items.push(item);}
+    else entry.items.push(item);
+  }
+  saveUpdData();
+  document.getElementById('updItemModal').classList.remove('open');
+  buildUpdates();
+  showToast(iid?'수정되었습니다':'항목이 추가되었습니다');
+}
+
+function deleteUpdItem(){
+  const date=document.getElementById('uim-date').value;
+  const iid=document.getElementById('uim-iid').value;
+  if(!confirm('이 항목을 삭제할까요?'))return;
+  const entry=UPDATES.find(u=>u.date===date);
+  if(entry)entry.items=entry.items.filter(i=>i.iid!==iid);
+  saveUpdData();
+  document.getElementById('updItemModal').classList.remove('open');
+  buildUpdates();
+  showToast('삭제되었습니다');
+}
+
+// ── COST ──────────────────────────────────────────────────────────────────
+function loadCostData(){
+  try{const s=localStorage.getItem('sll_cost');if(s)return JSON.parse(s);}catch(e){}
+  return getDefaultCosts();
+}
+function saveCostData(){try{localStorage.setItem('sll_cost',JSON.stringify(COSTS));}catch(e){}}
+
+function getDefaultCosts(){
+  return [
+    {id:'c1',title:'힘쎈여자 도봉순',partner:'Wiip',region:'미국',currency:'usd',spent:0,plan:3.6,note:'총 7.5만불 wiip 5:5 공동부담. SLL 부담 약 3.75만불.'},
+    {id:'c2',title:'몸값 (Bargain)',partner:'Wiip',region:'미국',currency:'usd',spent:0,plan:7.5,note:'Jonas 1,2고 집필료 총 30만불 이내. wiip/SLL/클라이맥스 5:2.5:2.5 부담. SLL 부담 약 7.5만불.'},
+    {id:'c3',title:'킹더랜드',partner:'TCC',region:'미국',currency:'usd',spent:0,plan:3.0,note:'쇼러너 계약시 약 3만불 예상.'},
+    {id:'c4',title:'CAPCA — Benjamin Ojo',partner:'Little Engine',region:'캐나다',currency:'krw',spent:0.15,plan:0,note:'CMF 10만불, SLL 0.6억/4작품. 작품당 약 0.15억.'},
+    {id:'c5',title:'CAPCA — Edge of Rivalry',partner:'Life Sketch',region:'캐나다',currency:'krw',spent:0.15,plan:1.0,note:'SLL 0.15억 집행. 쇼러너 계약시 추가 ~1억 예상.'},
+    {id:'c6',title:'CAPCA — Greens',partner:'Goyangi',region:'캐나다',currency:'krw',spent:0.15,plan:0,note:'SLL 0.15억 집행. Creative BC 지원 신청 예정.'},
+    {id:'c7',title:'CAPCA — Good Detective',partner:'TCC',region:'캐나다',currency:'krw',spent:0.15,plan:1.0,note:'SLL 0.15억 집행. Creative BC 파일럿 집필 후 진행.'},
+    {id:'c8',title:'서울팰리스',partner:'Banger Film',region:'캐나다',currency:'krw',spent:0,plan:0,note:'캐스팅 확정 후 예산 재정비 예정.'},
+    {id:'c9',title:'기상청사람들',partner:'Wiip',region:'미국',currency:'krw',spent:0,plan:0,note:'공동제작 계약 후 확정 예정.'},
+    {id:'c10',title:'괴물',partner:'Wiip',region:'미국',currency:'krw',spent:0,plan:0,note:'계약 후 확정.'},
+    {id:'c11',title:'재벌집 막내아들',partner:'Wiip',region:'미국',currency:'krw',spent:0,plan:0,note:'아컴 MOU 체결 후 진행.'},
+  ];
+}
+
+function getFxRate(){return parseFloat(document.getElementById('fx-rate').value)||1380;}
+function toKrw(amount,currency){if(currency==='usd')return amount*getFxRate()/10000;return amount;}
+function toUsd(amount,currency){if(currency==='krw')return amount*10000/getFxRate();return amount;}
+function fmtKrw(v){return v>0?v.toFixed(2)+'억':'—';}
+function fmtUsd(v){return v>0?v.toFixed(1)+'만불':'—';}
+function fmtDual(amount,currency){
+  const krw=toKrw(amount,currency);
+  const usd=toUsd(amount,currency);
+  if(amount<=0)return '<span style="color:var(--textmut)">미집행</span>';
+  return '<span style="font-weight:600">'+fmtKrw(krw)+'</span> <span style="font-size:10px;color:var(--textmut)">('+fmtUsd(usd)+')</span>';
+}
+
+function buildCost(){
+  const root=document.getElementById('cost-root');
+  if(!root)return;
+  root.innerHTML='';
+  const totalSpentKrw=COSTS.reduce((s,c)=>s+toKrw(c.spent,c.currency),0);
+  const totalPlanKrw=COSTS.reduce((s,c)=>s+toKrw(c.plan,c.currency),0);
+  const fx=getFxRate();
+  const tc=document.createElement('div');
+  tc.className='cost-total-card';
+  tc.innerHTML='<div class="ct-item"><p>SLL 기집행 합계</p><strong>'+fmtKrw(totalSpentKrw)+'</strong>'
+    +'<div style="font-size:11px;color:#AACCEE;margin-top:2px">'+fmtUsd(totalSpentKrw*10000/fx)+'</div></div>'
+    +'<div class="ct-item"><p>추가 집행 예정</p><strong>'+fmtKrw(totalPlanKrw)+'</strong>'
+    +'<div style="font-size:11px;color:#AACCEE;margin-top:2px">'+fmtUsd(totalPlanKrw*10000/fx)+'</div></div>'
+    +'<div class="ct-item"><p>총 예상 비용</p><strong>'+fmtKrw(totalSpentKrw+totalPlanKrw)+'</strong>'
+    +'<div style="font-size:11px;color:#AACCEE;margin-top:2px">'+fmtUsd((totalSpentKrw+totalPlanKrw)*10000/fx)+'</div></div>'
+    +'<div class="ct-item" style="margin-left:auto;font-size:11px;color:#AACCEE;align-self:center;text-align:right">'
+    +'SLL 부담분 기준<br>환율 '+fx.toLocaleString()+'원/달러 적용</div>';
+  root.appendChild(tc);
+
+  const grid=document.createElement('div');
+  grid.className='cost-grid';
+  COSTS.forEach(c=>{
+    const rc=c.region==='미국'?'#2E75B6':'#C63030';
+    const spentKrw=toKrw(c.spent,c.currency);
+    const planKrw=toKrw(c.plan,c.currency);
+    const max=Math.max(spentKrw+planKrw,.01);
+    const card=document.createElement('div');
+    card.className='cost-card';
+    card.style.cursor='pointer';
+    card.onclick=(function(cid){return function(){openCostModal(cid);};})(c.id);
+    card.innerHTML='<div class="cost-head" style="border-left:3px solid '+rc+'">'
+      +'<div><div class="cost-title">'+c.title+'</div><div class="cost-partner">'+c.partner+'</div></div>'
+      +'<span class="tag" style="background:'+(c.region==='미국'?'#EAF2FC':'#FDECEA')+';color:'+rc+'">'+c.region+'</span>'
+      +'</div>'
+      +'<div class="cost-body">'
+      +'<div class="cost-row"><span class="cost-label">기집행</span><span>'+fmtDual(c.spent,c.currency)+'</span></div>'
+      +'<div class="cost-bar-wrap"><div class="cost-bar-fill" style="width:'+(spentKrw/max*100).toFixed(1)+'%;background:#2E75B6"></div></div>'
+      +'<div class="cost-row"><span class="cost-label">추가 예정</span><span>'+fmtDual(c.plan,c.currency)+'</span></div>'
+      +'<div class="cost-bar-wrap"><div class="cost-bar-fill" style="width:'+(planKrw/max*100).toFixed(1)+'%;background:#BA7517"></div></div>'
+      +'<div class="cost-note">'+(c.note||'—')+'</div>'
+      +'<div style="font-size:10px;color:var(--textmut);margin-top:6px;text-align:right">클릭하여 수정 ✏️</div>'
+      +'</div>';
+    grid.appendChild(card);
+  });
+  root.appendChild(grid);
+}
+
+function openCostAddModal(){
+  document.getElementById('cm-title').textContent='비용 항목 추가';
+  document.getElementById('cm-id').value='';
+  document.getElementById('cm-title-inp').value='';
+  document.getElementById('cm-partner').value='';
+  document.getElementById('cm-region').value='미국';
+  document.getElementById('cm-currency').value='krw';
+  document.getElementById('cm-spent').value='';
+  document.getElementById('cm-plan').value='';
+  document.getElementById('cm-note').value='';
+  document.getElementById('cm-del-btn').style.display='none';
+  updateCostLabels();
+  document.getElementById('costModal').classList.add('open');
+}
+function openCostModal(cid){
+  const c=COSTS.find(x=>x.id===cid);
+  if(!c)return;
+  document.getElementById('cm-title').textContent='비용 항목 수정';
+  document.getElementById('cm-id').value=cid;
+  document.getElementById('cm-title-inp').value=c.title;
+  document.getElementById('cm-partner').value=c.partner;
+  document.getElementById('cm-region').value=c.region;
+  document.getElementById('cm-currency').value=c.currency||'krw';
+  document.getElementById('cm-spent').value=c.spent;
+  document.getElementById('cm-plan').value=c.plan;
+  document.getElementById('cm-note').value=c.note;
+  document.getElementById('cm-del-btn').style.display='';
+  updateCostLabels();
+  document.getElementById('costModal').classList.add('open');
+}
+function updateCostLabels(){
+  const cur=document.getElementById('cm-currency').value;
+  const lbl=cur==='usd'?' (만불)':' (억원)';
+  document.getElementById('cm-spent-label').textContent='기집행 금액'+lbl;
+  document.getElementById('cm-plan-label').textContent='추가 예정 금액'+lbl;
+}
+function saveCostItem(){
+  const cid=document.getElementById('cm-id').value;
+  const title=document.getElementById('cm-title-inp').value.trim();
+  if(!title){alert('프로젝트명을 입력해주세요.');return;}
+  const item={
+    id:cid||'c'+Date.now(),
+    title,partner:document.getElementById('cm-partner').value.trim(),
+    region:document.getElementById('cm-region').value,
+    currency:document.getElementById('cm-currency').value,
+    spent:parseFloat(document.getElementById('cm-spent').value)||0,
+    plan:parseFloat(document.getElementById('cm-plan').value)||0,
+    note:document.getElementById('cm-note').value.trim(),
+  };
+  if(cid){const idx=COSTS.findIndex(x=>x.id===cid);if(idx>=0)COSTS[idx]=item;}
+  else COSTS.push(item);
+  saveCostData();
+  document.getElementById('costModal').classList.remove('open');
+  buildCost();
+  showToast(cid?'수정되었습니다':'항목이 추가되었습니다');
+}
+function deleteCostItem(){
+  const cid=document.getElementById('cm-id').value;
+  if(!confirm('이 항목을 삭제할까요?'))return;
+  COSTS=COSTS.filter(x=>x.id!==cid);
+  saveCostData();
+  document.getElementById('costModal').classList.remove('open');
+  buildCost();
+  showToast('삭제되었습니다');
+}
+
+// ── NAV ──────────────────────────────────────────────────────────
+function switchTab(id,btn){
+  document.querySelectorAll('.nav-tab').forEach(b=>b.classList.remove('on'));
+  document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('on'));
+  btn.classList.add('on');
+  document.getElementById('tab-'+id).classList.add('on');
+}
+
+// close modals on bg click
+['projModal','groupModal','updModal'].forEach(id=>{
+  document.getElementById(id).addEventListener('click',function(e){if(e.target===this)this.classList.remove('open')});
+});
+
+// ── INIT ─────────────────────────────────────────────────────────
+(function(){
+  const now=new Date();
+  document.getElementById('hdate').textContent=`${now.getFullYear()}년 ${now.getMonth()+1}월 ${now.getDate()}일`;
+  // init event listeners for new modals
+  document.getElementById('uim-type').addEventListener('change',toggleUpdItemType);
+  document.getElementById('cm-currency').addEventListener('change',updateCostLabels);
+  ['updDateModal','updItemModal','costModal'].forEach(id=>{
+    document.getElementById(id).addEventListener('click',function(e){if(e.target===this)this.classList.remove('open')});
+  });
+  buildTimeline();
+  buildUpdates();
+  buildCost();
+})();
+</script>
+</body>
+</html>
