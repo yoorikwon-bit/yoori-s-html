@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>목표관리의 효율성과 동기 관리의 관계성 — 4조</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100%;height:100%;overflow:hidden;background:#1a1a2e;font-family:'Noto Sans KR',-apple-system,sans-serif}
+
+.stage{width:100vw;height:100vh;display:flex;flex-direction:column}
+.slide-area{flex:1;display:flex;align-items:center;justify-content:center;padding:16px 24px 0}
+
+/* 슬라이드 — 흰 배경 기본, 16:9 고정 */
+.slide{
+  display:none;width:100%;max-width:1160px;
+  aspect-ratio:16/9;
+  position:relative;overflow:hidden;
+  border-radius:6px;
+  background:#ffffff;
+  box-shadow:0 12px 48px rgba(0,0,0,.35);
+}
+.slide.on{display:block}
+
+/* 상단 얇은 컬러 라인 */
+.accent-line{position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,#1a4fd8 0%,#4b7bec 70%,transparent 100%)}
+.accent-line-gold{position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,#1a4fd8 0%,#6c8fd8 100%)}
+
+/* 공통 inner 패딩 */
+.inner{position:absolute;inset:0;padding:4.5% 6.5%;display:flex;flex-direction:column}
+
+/* 상단바 */
+.topbar{display:flex;align-items:center;gap:12px;flex-shrink:0;margin-bottom:3%}
+.tb-label{font-size:clamp(9px,.75vw,11px);font-weight:700;color:#1a4fd8;letter-spacing:.7px;text-transform:uppercase;white-space:nowrap}
+.tb-line{flex:1;height:1px;background:#e2e8f0}
+.tb-right{font-size:clamp(9px,.75vw,11px);color:#94a3b8;white-space:nowrap}
+
+/* 타이포 */
+.hero{font-size:clamp(18px,3vw,40px);font-weight:900;color:#0f172a;line-height:1.25;letter-spacing:-.5px}
+.hero-em{color:#1a4fd8}
+.h2{font-size:clamp(12px,1.4vw,18px);font-weight:700;color:#0f172a;line-height:1.35}
+.body{font-size:clamp(9px,.88vw,12.5px);color:#475569;line-height:1.75}
+.body-dark{font-size:clamp(9px,.88vw,12.5px);color:#1e293b;line-height:1.75}
+.label{font-size:clamp(8px,.72vw,10px);font-weight:700;color:#1a4fd8;letter-spacing:.6px;text-transform:uppercase}
+.caption{font-size:clamp(7px,.65vw,9.5px);color:#94a3b8;line-height:1.5}
+
+/* 구분선 */
+.div-blue{width:36px;height:3px;background:#1a4fd8;flex-shrink:0;margin:2% 0}
+.div-hr{width:100%;height:1px;background:#e2e8f0;flex-shrink:0;margin:2% 0}
+
+/* 레이아웃 */
+.cols{display:flex;gap:5%;flex:1;min-height:0}
+.col{flex:1;display:flex;flex-direction:column}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:4%}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:4%}
+.g4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:3%}
+.g5{display:grid;grid-template-columns:repeat(5,1fr);gap:3%}
+
+/* 포인트 리스트 */
+.pt{display:flex;gap:8px;align-items:flex-start}
+.pt-dot{width:5px;height:5px;border-radius:50%;background:#1a4fd8;flex-shrink:0;margin-top:5px}
+.pts{display:flex;flex-direction:column;gap:5%}
+
+/* 파란 강조 블록 */
+.callout{border-left:3px solid #1a4fd8;padding-left:14px;background:#f0f5ff;border-radius:0 6px 6px 0;padding:10px 14px 10px 14px}
+.callout p{font-size:clamp(9px,.85vw,12px);color:#1e3a8a;line-height:1.65}
+.callout-warn{border-left:3px solid #f59e0b;padding:10px 14px;background:#fffbeb;border-radius:0 6px 6px 0}
+.callout-warn p{font-size:clamp(9px,.85vw,12px);color:#78350f;line-height:1.65}
+
+/* 하단 그라데이션 바 */
+.footer-bar{position:absolute;bottom:0;left:0;right:0;height:9%;background:linear-gradient(90deg,#0f2a6b 0%,#1a4fd8 100%);display:flex;align-items:center;justify-content:space-between;padding:0 6.5%}
+.fb-text{font-size:clamp(7px,.7vw,10px);color:rgba(255,255,255,.7);letter-spacing:.2px}
+
+/* 네비 */
+.nav{height:46px;flex-shrink:0;display:flex;align-items:center;justify-content:center;gap:14px;background:#0d1117;border-top:1px solid rgba(255,255,255,.06)}
+.nbtn{display:flex;align-items:center;gap:4px;font-size:12px;color:rgba(255,255,255,.4);background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:6px;padding:5px 14px;cursor:pointer;transition:all .15s;font-family:inherit}
+.nbtn:hover{color:#fff;background:rgba(255,255,255,.1)}
+.nbtn:disabled{opacity:.2;cursor:default}
+.dots{display:flex;gap:5px}
+.dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.2);border:none;cursor:pointer;padding:0;transition:all .15s}
+.dot.on{background:#4b7bec;transform:scale(1.45)}
+.cnt{font-size:11px;color:rgba(255,255,255,.25);min-width:38px;text-align:center}
+.fsbtn{position:fixed;top:10px;right:14px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.4);border-radius:6px;padding:5px 11px;font-size:11px;cursor:pointer;display:flex;align-items:center;gap:4px;z-index:200;transition:all .15s;font-family:inherit}
+.fsbtn:hover{color:#fff}
+</style>
+</head>
+<body>
+
+<button class="fsbtn" onclick="toggleFS()" id="fsbtn">⛶ 전체화면</button>
+
+<div class="stage">
+<div class="slide-area">
+
+<!-- ══ S1 타이틀 ══ -->
+<div class="slide on" id="s1">
+  <div class="accent-line"></div>
+  <div class="inner" style="justify-content:space-between;padding-bottom:11%">
+    <div style="display:flex;align-items:center;gap:12px;flex-shrink:0">
+      <span style="font-size:clamp(9px,.75vw,11px);font-weight:700;color:#1a4fd8;letter-spacing:.7px">YONSEI CMBA 105</span>
+      <div style="flex:1;height:1px;background:#e2e8f0"></div>
+    </div>
+    <div style="flex:1;display:flex;flex-direction:column;justify-content:center;padding:2% 0">
+      <div class="label" style="margin-bottom:2%">조직행동론 기말 레포트 · 3반 4조</div>
+      <div class="hero" style="font-size:clamp(22px,3.5vw,48px)">목표관리의 효율성과<br><span class="hero-em">동기 관리의</span> 관계성</div>
+      <div style="width:36px;height:3px;background:#1a4fd8;margin:2.5% 0"></div>
+      <div class="body" style="max-width:52%;font-size:clamp(10px,.9vw,13px);color:#64748b">다섯 편의 문헌 검토와 실무 경험 토론을 중심으로</div>
+    </div>
+  </div>
+  <div class="footer-bar">
+    <span class="fb-text">2026.06.11</span>
+    <span class="fb-text">권유리 · 김범중 · 김서영 · 남궁휘윤 · 백유나 · 이호 · 정선영 · 차성민 · 최준원 · 한종석</span>
+  </div>
+</div>
+
+<!-- ══ S2 연구 개요 ══ -->
+<div class="slide" id="s2">
+  <div class="accent-line"></div>
+  <div class="inner" style="padding-bottom:4%">
+    <div class="topbar">
+      <span class="tb-label">연구 개요</span>
+      <div class="tb-line"></div>
+      <span class="tb-right">CMBA 4조</span>
+    </div>
+    <div class="hero" style="font-size:clamp(16px,2.5vw,34px);margin-bottom:2.5%">목표를 설정하는 것만으로<br>성과는 보장되는가?</div>
+    <div class="callout" style="margin-bottom:4%;flex-shrink:0">
+      <p>다섯 편의 문헌을 검토한 결과, 공통된 발견 — <strong>목표관리의 효과는 구성원의 동기와 조직문화에 의해 결정된다.</strong></p>
+    </div>
+    <!-- 5편 문헌: 숫자 진하게, 제목 진하게 -->
+    <div class="g5" style="flex:1;align-content:center">
+      <div>
+        <div style="font-size:clamp(26px,3.5vw,48px);font-weight:900;color:#c7d4f0;line-height:1">01</div>
+        <div style="font-size:clamp(10px,1vw,13.5px);font-weight:700;color:#0f172a;margin:5% 0 2%">목표설정이론</div>
+        <div style="font-size:clamp(8px,.72vw,10px);color:#475569">Locke & Latham (2002)</div>
+        <div style="font-size:clamp(7px,.65vw,9.5px);color:#94a3b8;margin-top:3%;line-height:1.6">Building a practically useful theory of goal setting and task motivation</div>
+      </div>
+      <div>
+        <div style="font-size:clamp(26px,3.5vw,48px);font-weight:900;color:#c7d4f0;line-height:1">02</div>
+        <div style="font-size:clamp(10px,1vw,13.5px);font-weight:700;color:#0f172a;margin:5% 0 2%">MBO 효과성</div>
+        <div style="font-size:clamp(8px,.72vw,10px);color:#475569">Rodgers & Hunter (1991)<br>Dogru et al. (2024)</div>
+        <div style="font-size:clamp(7px,.65vw,9.5px);color:#94a3b8;margin-top:3%;line-height:1.6">Impact of MBO on organizational productivity</div>
+      </div>
+      <div>
+        <div style="font-size:clamp(26px,3.5vw,48px);font-weight:900;color:#c7d4f0;line-height:1">03</div>
+        <div style="font-size:clamp(10px,1vw,13.5px);font-weight:700;color:#0f172a;margin:5% 0 2%">OKR vs MBO</div>
+        <div style="font-size:clamp(8px,.72vw,10px);color:#475569">Criado et al. (2024)</div>
+        <div style="font-size:clamp(7px,.65vw,9.5px);color:#94a3b8;margin-top:3%;line-height:1.6">Exploring the effectiveness of OKRs — 9개국 238명</div>
+      </div>
+      <div>
+        <div style="font-size:clamp(26px,3.5vw,48px);font-weight:900;color:#c7d4f0;line-height:1">04</div>
+        <div style="font-size:clamp(10px,1vw,13.5px);font-weight:700;color:#0f172a;margin:5% 0 2%">자기결정이론</div>
+        <div style="font-size:clamp(8px,.72vw,10px);color:#475569">Deci & Ryan (1985/2000)</div>
+        <div style="font-size:clamp(7px,.65vw,9.5px);color:#94a3b8;margin-top:3%;line-height:1.6">Intrinsic motivation and self-determination in human behavior</div>
+      </div>
+      <div>
+        <div style="font-size:clamp(26px,3.5vw,48px);font-weight:900;color:#c7d4f0;line-height:1">05</div>
+        <div style="font-size:clamp(10px,1vw,13.5px);font-weight:700;color:#0f172a;margin:5% 0 2%">Gaming 현상</div>
+        <div style="font-size:clamp(8px,.72vw,10px);color:#475569">Aboubichr & Conway (2023)</div>
+        <div style="font-size:clamp(7px,.65vw,9.5px);color:#94a3b8;margin-top:3%;line-height:1.6">The gaming of performance management systems in British universities</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ S3 목표설정이론 ══ -->
+<div class="slide" id="s3">
+  <div class="accent-line"></div>
+  <div class="inner" style="padding-bottom:4%">
+    <div class="topbar">
+      <span class="tb-label">Ⅱ. 목표설정이론</span>
+      <div class="tb-line"></div>
+      <span class="tb-right">Locke & Latham (2002)</span>
+    </div>
+    <!-- 상단 소개 -->
+    <div class="body" style="color:#64748b;margin-bottom:3%;flex-shrink:0">Locke &amp; Latham — 약 <strong style="color:#0f172a">35년간의 실증 연구</strong>를 통해 두 가지를 발견</div>
+
+    <div class="cols" style="flex:1;align-items:stretch;gap:5%">
+
+      <!-- 왼쪽: 두 가지 핵심 발견 인포그래픽 -->
+      <div class="col" style="flex:1.2">
+        <div class="label" style="margin-bottom:3%">두 가지 핵심 발견</div>
+
+        <!-- 발견 1 카드 -->
+        <div style="background:#f0f5ff;border-radius:10px;padding:4% 5%;margin-bottom:3%;border-left:4px solid #1a4fd8;flex-shrink:0">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:3%">
+            <div style="font-size:clamp(28px,3.5vw,46px);font-weight:900;color:#1a4fd8;line-height:1;flex-shrink:0">①</div>
+            <div style="font-size:clamp(11px,1.1vw,15px);font-weight:700;color:#0f172a">목표는 구체적이어야 한다</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+            <div style="background:#fff;border:1px solid #cbd5e1;border-radius:6px;padding:3px 10px;font-size:clamp(8px,.75vw,11px);color:#64748b">"최선을 다하라" ✗</div>
+            <div style="font-size:12px;color:#94a3b8">vs</div>
+            <div style="background:#1a4fd8;border-radius:6px;padding:3px 10px;font-size:clamp(8px,.75vw,11px);color:#fff;font-weight:600">"신규 고객 15개사 확보" ✓</div>
+          </div>
+        </div>
+
+        <!-- 발견 2 카드 -->
+        <div style="background:#f0f5ff;border-radius:10px;padding:4% 5%;border-left:4px solid #1a4fd8;flex-shrink:0">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:3%">
+            <div style="font-size:clamp(28px,3.5vw,46px);font-weight:900;color:#1a4fd8;line-height:1;flex-shrink:0">②</div>
+            <div style="font-size:clamp(11px,1.1vw,15px);font-weight:700;color:#0f172a">목표는 도전적이어야 한다</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px">
+            <!-- 바 차트 인포그래픽 -->
+            <div style="flex:1">
+              <div style="display:flex;align-items:flex-end;gap:6px;height:42px">
+                <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px">
+                  <div style="width:100%;background:#e2e8f0;border-radius:3px 3px 0 0;height:14px"></div>
+                  <div style="font-size:clamp(7px,.62vw,9px);color:#94a3b8;text-align:center">쉬운 목표</div>
+                </div>
+                <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px">
+                  <div style="width:100%;background:#1a4fd8;border-radius:3px 3px 0 0;height:42px"></div>
+                  <div style="font-size:clamp(7px,.62vw,9px);color:#1a4fd8;font-weight:700;text-align:center">도전적 목표</div>
+                </div>
+              </div>
+            </div>
+            <div style="font-size:clamp(9px,.85vw,12px);color:#475569;line-height:1.6">도전적 목표 부여 시<br>쉬운 목표 대비<br><strong style="color:#1a4fd8;font-size:clamp(12px,1.3vw,17px)">250%</strong> 이상 성과</div>
+          </div>
+        </div>
+
+        <div class="div-hr" style="margin:3% 0"></div>
+        <div class="label" style="margin-bottom:2%">핵심 조절변수</div>
+        <div style="display:flex;gap:3%;flex-shrink:0">
+          <div style="flex:1;text-align:center;background:#f8faff;border-radius:8px;padding:3% 2%;border:1px solid #dbe4f5">
+            <div style="font-size:clamp(8px,.78vw,11px);font-weight:700;color:#1a4fd8;margin-bottom:2%">Goal Commitment</div>
+            <div style="font-size:clamp(7px,.65vw,9.5px);color:#64748b">목표 몰입</div>
+          </div>
+          <div style="flex:1;text-align:center;background:#f8faff;border-radius:8px;padding:3% 2%;border:1px solid #dbe4f5">
+            <div style="font-size:clamp(8px,.78vw,11px);font-weight:700;color:#1a4fd8;margin-bottom:2%">Self-efficacy</div>
+            <div style="font-size:clamp(7px,.65vw,9.5px);color:#64748b">자기효능감</div>
+          </div>
+          <div style="flex:1;text-align:center;background:#f8faff;border-radius:8px;padding:3% 2%;border:1px solid #dbe4f5">
+            <div style="font-size:clamp(8px,.78vw,11px);font-weight:700;color:#1a4fd8;margin-bottom:2%">Feedback</div>
+            <div style="font-size:clamp(7px,.65vw,9.5px);color:#64748b">피드백</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 세로 구분선 -->
+      <div style="width:1px;background:#e2e8f0;flex-shrink:0"></div>
+
+      <!-- 오른쪽: 메커니즘 다이어그램 -->
+      <div class="col">
+        <div class="label" style="margin-bottom:3%">목표 → 성과 메커니즘</div>
+
+        <!-- 세로 플로우 다이어그램 -->
+        <div style="display:flex;flex-direction:column;flex:1;position:relative">
+
+          <!-- 연결선 (세로) -->
+          <div style="position:absolute;left:18px;top:26px;bottom:26px;width:2px;background:linear-gradient(180deg,#1a4fd8 0%,#4b7bec 100%);z-index:0"></div>
+
+          <!-- 항목 1 -->
+          <div style="display:flex;align-items:center;gap:12px;flex:1;position:relative;z-index:1">
+            <div style="width:36px;height:36px;border-radius:50%;background:#1a4fd8;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 0 0 4px #e8f0fe">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            </div>
+            <div>
+              <div style="font-size:clamp(9px,.88vw,12px);font-weight:700;color:#1a4fd8">방향성 (Direction)</div>
+              <div class="body" style="color:#475569;font-size:clamp(8px,.75vw,10.5px)">목표 달성에 필요한 행동으로 주의 집중</div>
+            </div>
+          </div>
+
+          <!-- 항목 2 -->
+          <div style="display:flex;align-items:center;gap:12px;flex:1;position:relative;z-index:1">
+            <div style="width:36px;height:36px;border-radius:50%;background:#2558e0;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 0 0 4px #e8f0fe">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+            </div>
+            <div>
+              <div style="font-size:clamp(9px,.88vw,12px);font-weight:700;color:#2558e0">노력 (Effort)</div>
+              <div class="body" style="color:#475569;font-size:clamp(8px,.75vw,10.5px)">목표 난이도에 비례해 투입 강도 증가</div>
+            </div>
+          </div>
+
+          <!-- 항목 3 -->
+          <div style="display:flex;align-items:center;gap:12px;flex:1;position:relative;z-index:1">
+            <div style="width:36px;height:36px;border-radius:50%;background:#3b6de8;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 0 0 4px #e8f0fe">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            </div>
+            <div>
+              <div style="font-size:clamp(9px,.88vw,12px);font-weight:700;color:#3b6de8">지속성 (Persistence)</div>
+              <div class="body" style="color:#475569;font-size:clamp(8px,.75vw,10.5px)">어려움이 생겨도 더 오래 노력을 지속</div>
+            </div>
+          </div>
+
+          <!-- 항목 4 -->
+          <div style="display:flex;align-items:center;gap:12px;flex:1;position:relative;z-index:1">
+            <div style="width:36px;height:36px;border-radius:50%;background:#4b7bec;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 0 0 4px #e8f0fe">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/><path d="M16.24 7.76a6 6 0 010 8.49m-8.48-.01a6 6 0 010-8.49m11.31-2.82a10 10 0 010 14.14m-14.14 0a10 10 0 010-14.14"/></svg>
+            </div>
+            <div>
+              <div style="font-size:clamp(9px,.88vw,12px);font-weight:700;color:#4b7bec">전략 (Strategy)</div>
+              <div class="body" style="color:#475569;font-size:clamp(8px,.75vw,10.5px)">복잡한 과업에서 새로운 해결 전략 개발</div>
+            </div>
+          </div>
+
+          <!-- 성과 결과 -->
+          <div style="display:flex;align-items:center;gap:12px;flex-shrink:0;position:relative;z-index:1;margin-top:1%">
+            <div style="width:36px;height:36px;border-radius:50%;background:#0f172a;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+            </div>
+            <div style="background:#0f172a;border-radius:6px;padding:3px 14px">
+              <div style="font-size:clamp(9px,.88vw,12px);font-weight:700;color:#fff">성과 창출</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ S4 MBO ══ -->
+<div class="slide" id="s4" style="background:#f8faff">
+  <div class="accent-line"></div>
+  <div class="inner" style="padding-bottom:4%">
+    <div class="topbar">
+      <span class="tb-label">Ⅲ. MBO의 효과성과 부작용</span>
+      <div class="tb-line"></div>
+      <span class="tb-right">Rodgers & Hunter (1991)</span>
+    </div>
+    <div class="hero" style="font-size:clamp(16px,2.4vw,30px);margin-bottom:2.5%">MBO는 효과적이다.<br>단, 경영진의 몰입이 전제될 때</div>
+
+    <!-- 상단: 수치 3개 + 아이콘 이미지 -->
+    <div style="display:flex;gap:4%;align-items:stretch;flex:1;min-height:0">
+
+      <!-- 왼쪽: 수치 3개 세로 배치 -->
+      <div style="flex:1;display:flex;flex-direction:column;gap:4%">
+
+        <!-- 98% -->
+        <div id="s4-a1" style="flex:1;display:flex;align-items:center;gap:5%;border-left:4px solid #1a4fd8;padding-left:5%;opacity:0;transition:opacity .5s ease,transform .5s ease;transform:translateX(-12px)">
+          <div style="flex-shrink:0">
+            <div style="font-size:clamp(32px,4.5vw,58px);font-weight:900;color:#1a4fd8;line-height:1">98<span style="font-size:clamp(16px,1.8vw,24px);font-weight:400;color:#64748b">%</span></div>
+          </div>
+          <div>
+            <div style="font-size:clamp(10px,.95vw,13px);font-weight:700;color:#0f172a;margin-bottom:2%">연구 70편 중 성과 향상</div>
+            <div class="body" style="color:#64748b">MBO 도입 후 성과가 향상됨을 확인</div>
+          </div>
+        </div>
+
+        <div style="height:1px;background:#f1f5f9;flex-shrink:0"></div>
+
+        <!-- +56% -->
+        <div id="s4-a2" style="flex:1;display:flex;align-items:center;gap:5%;border-left:4px solid #1a4fd8;padding-left:5%;opacity:0;transition:opacity .5s ease,transform .5s ease;transform:translateX(-12px)">
+          <div style="flex-shrink:0">
+            <div style="font-size:clamp(32px,4.5vw,58px);font-weight:900;color:#1a4fd8;line-height:1">+56<span style="font-size:clamp(16px,1.8vw,24px);font-weight:400;color:#64748b">%</span></div>
+          </div>
+          <div>
+            <div style="font-size:clamp(10px,.95vw,13px);font-weight:700;color:#0f172a;margin-bottom:2%">경영진 몰입 높을 때</div>
+            <div class="body" style="color:#64748b">적극적 참여 시 성과 향상폭</div>
+          </div>
+        </div>
+
+        <div style="height:1px;background:#f1f5f9;flex-shrink:0"></div>
+
+        <!-- +6% -->
+        <div id="s4-a3" style="flex:1;display:flex;align-items:center;gap:5%;border-left:4px solid #cbd5e1;padding-left:5%;opacity:0;transition:opacity .5s ease,transform .5s ease;transform:translateX(-12px)">
+          <div style="flex-shrink:0">
+            <div style="font-size:clamp(32px,4.5vw,58px);font-weight:900;color:#94a3b8;line-height:1">+6<span style="font-size:clamp(16px,1.8vw,24px);font-weight:400">%</span></div>
+          </div>
+          <div>
+            <div style="font-size:clamp(10px,.95vw,13px);font-weight:700;color:#94a3b8;margin-bottom:2%">경영진 몰입 낮을 때</div>
+            <div class="body" style="color:#94a3b8">형식적 도입 시 성과 향상폭</div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- 오른쪽: SVG + 9배 — s4-a3과 함께 등장 -->
+      <div id="s4-a3b" style="flex:0 0 38%;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#f8faff;border-radius:12px;padding:4%;gap:3%;opacity:0;transition:opacity .5s ease,transform .5s ease;transform:translateX(12px)">
+
+        <!-- 차트 -->
+        <svg viewBox="0 0 220 175" width="100%" style="max-height:130px">
+          <line x1="30" y1="10" x2="30" y2="145" stroke="#e2e8f0" stroke-width="1"/>
+          <line x1="30" y1="145" x2="200" y2="145" stroke="#e2e8f0" stroke-width="1"/>
+          <line x1="30" y1="110" x2="200" y2="110" stroke="#e2e8f0" stroke-width="0.5" stroke-dasharray="3,3"/>
+          <line x1="30" y1="75" x2="200" y2="75" stroke="#e2e8f0" stroke-width="0.5" stroke-dasharray="3,3"/>
+          <line x1="30" y1="40" x2="200" y2="40" stroke="#e2e8f0" stroke-width="0.5" stroke-dasharray="3,3"/>
+          <text x="22" y="148" font-size="8" fill="#94a3b8" text-anchor="end">0</text>
+          <text x="22" y="78" font-size="8" fill="#94a3b8" text-anchor="end">50</text>
+          <text x="22" y="43" font-size="8" fill="#94a3b8" text-anchor="end">100</text>
+          <rect x="55" y="135" width="40" height="10" rx="3" fill="#e2e8f0"/>
+          <text x="75" y="130" font-size="8" fill="#94a3b8" text-anchor="middle">+6%</text>
+          <text x="75" y="160" font-size="8" fill="#94a3b8" text-anchor="middle">몰입 낮음</text>
+          <rect x="125" y="100" width="40" height="45" rx="3" fill="#1a4fd8"/>
+          <text x="145" y="95" font-size="9" fill="#1a4fd8" font-weight="bold" text-anchor="middle">+56%</text>
+          <text x="145" y="160" font-size="8" fill="#1a4fd8" text-anchor="middle" font-weight="bold">몰입 높음</text>
+        </svg>
+
+        <!-- 9배 강조 -->
+        <div style="width:100%;background:#1a4fd8;border-radius:8px;padding:4% 5%;text-align:center">
+          <div style="font-size:clamp(8px,.75vw,11px);color:rgba(255,255,255,.75);margin-bottom:2%">경영진 몰입 수준에 따라</div>
+          <div style="font-size:clamp(20px,2.5vw,32px);font-weight:900;color:#fff;line-height:1">최대 <span style="font-size:clamp(30px,4vw,48px)">9배</span> 차이</div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- 하단: 핵심 부작용 -->
+    <div id="s4-a4" style="flex-shrink:0;margin-top:3%;background:#fef2f2;border-radius:8px;border-left:4px solid #dc2626;padding:2.5% 3%;opacity:0;transition:opacity .5s ease,transform .5s ease;transform:translateY(10px)">
+      <div style="display:flex;align-items:flex-start;gap:3%">
+        <div style="flex-shrink:0">
+          <span style="font-size:clamp(8px,.75vw,11px);font-weight:700;color:#dc2626;letter-spacing:.5px;text-transform:uppercase">핵심 부작용</span>
+        </div>
+        <div class="body" style="color:#334155">달성 여부가 급여·승진과 직결되면 구성원은 <strong style="color:#0f172a">달성 가능한 낮은 목표만 설정</strong>하려는 경향을 보인다. — Locke &amp; Latham의 도전적 목표 원칙과 정면 충돌</div>
+      </div>
+    </div>
+
+    <!-- 클릭 안내 -->
+    <div id="s4-hint" style="text-align:center;font-size:clamp(7px,.65vw,9.5px);color:#e2e8f0;margin-top:2%;flex-shrink:0">→ 키 또는 클릭으로 순서대로 확인</div>
+
+  </div>
+
+  <script>
+  (function(){
+    var steps = ['s4-a1','s4-a2','s4-a3','s4-a4'];
+    var step = 0;
+    var hint = document.getElementById('s4-hint');
+
+    function showNext(){
+      if(step < steps.length){
+        var id = steps[step];
+        var el = document.getElementById(id);
+        el.style.opacity = '1';
+        el.style.transform = id==='s4-a4' ? 'translateY(0)' : 'translateX(0)';
+        // s4-a3 등장 시 s4-a3b도 함께
+        if(id==='s4-a3'){
+          var b = document.getElementById('s4-a3b');
+          if(b){ b.style.opacity='1'; b.style.transform='translateX(0)'; }
+        }
+        step++;
+        if(step === steps.length && hint) hint.style.display = 'none';
+        return true; // 이 슬라이드에서 처리됨
+      }
+      return false; // 다음 슬라이드로
+    }
+
+    function resetAnim(){
+      step = 0;
+      steps.forEach(function(id){
+        var el = document.getElementById(id);
+        if(!el) return;
+        el.style.opacity='0';
+        el.style.transform = id==='s4-a4' ? 'translateY(10px)' : 'translateX(-12px)';
+      });
+      var b = document.getElementById('s4-a3b');
+      if(b){ b.style.opacity='0'; b.style.transform='translateX(12px)'; }
+      if(hint) hint.style.display = '';
+    }
+
+    // 슬라이드 4 클릭 이벤트
+    var slide = document.getElementById('s4');
+    if(slide){
+      slide.addEventListener('click', function(e){
+        if(step < steps.length){ showNext(); e.stopPropagation(); }
+      });
+    }
+
+    // 전역에 등록
+    window._s4 = { showNext: showNext, reset: resetAnim, done: function(){ return step >= steps.length; } };
+  })();
+  </script>
+</div>
+
+<!-- ══ S5 OKR vs MBO ══ -->
+<div class="slide" id="s5">
+  <div class="accent-line"></div>
+  <div class="inner" style="padding-bottom:4%">
+    <div class="topbar">
+      <span class="tb-label">Ⅳ. OKR vs MBO</span>
+      <div class="tb-line"></div>
+      <span class="tb-right">Criado et al. (2024) · 9개국 238명</span>
+    </div>
+    <div class="hero" style="font-size:clamp(16px,2.4vw,32px);margin-bottom:2.5%">인사평가와의 분리가<br>도전적 목표를 가능하게 한다</div>
+    <div class="div-blue"></div>
+    <!-- 비교표: MBO / OKR 각각 상단 중앙 제목, 나머지 글씨 진하게 -->
+    <div style="display:grid;grid-template-columns:1fr 48px 1fr;flex:1;align-items:start;gap:0">
+      <!-- MBO -->
+      <div style="display:flex;flex-direction:column">
+        <div style="text-align:center;font-size:clamp(13px,1.5vw,20px);font-weight:900;color:#1a4fd8;margin-bottom:3%;padding-bottom:3%;border-bottom:2px solid #1a4fd8">MBO</div>
+        <div style="display:flex;flex-direction:column;gap:0">
+          <div style="display:flex;justify-content:space-between;align-items:baseline;padding:5px 0;border-bottom:1px solid #f1f5f9"><span style="font-size:clamp(9px,.8vw,12px);color:#475569">인사평가 연계</span><span style="font-size:clamp(9px,.82vw,12px);font-weight:700;color:#1a4fd8">보상과 직결</span></div>
+          <div style="display:flex;justify-content:space-between;align-items:baseline;padding:5px 0;border-bottom:1px solid #f1f5f9"><span style="font-size:clamp(9px,.8vw,12px);color:#475569">운영 주기</span><span style="font-size:clamp(9px,.82vw,12px);font-weight:700;color:#1a4fd8">연 단위</span></div>
+          <div style="display:flex;justify-content:space-between;align-items:baseline;padding:5px 0;border-bottom:1px solid #f1f5f9"><span style="font-size:clamp(9px,.8vw,12px);color:#475569">적정 달성률</span><span style="font-size:clamp(9px,.82vw,12px);font-weight:700;color:#1a4fd8">100% 지향</span></div>
+          <div style="display:flex;justify-content:space-between;align-items:baseline;padding:5px 0;border-bottom:1px solid #f1f5f9"><span style="font-size:clamp(9px,.8vw,12px);color:#475569">도전적 목표</span><span style="font-size:clamp(9px,.82vw,12px);font-weight:700;color:#1a4fd8">회피 경향</span></div>
+          <div style="display:flex;justify-content:space-between;align-items:baseline;padding:5px 0"><span style="font-size:clamp(9px,.8vw,12px);color:#475569">목표 공개</span><span style="font-size:clamp(9px,.82vw,12px);font-weight:700;color:#1a4fd8">제한적</span></div>
+        </div>
+      </div>
+      <!-- VS -->
+      <div style="display:flex;align-items:center;justify-content:center;font-size:clamp(10px,1vw,14px);font-weight:700;color:#94a3b8">vs</div>
+      <!-- OKR -->
+      <div style="display:flex;flex-direction:column">
+        <div style="text-align:center;font-size:clamp(13px,1.5vw,20px);font-weight:900;color:#16a34a;margin-bottom:3%;padding-bottom:3%;border-bottom:2px solid #16a34a">OKR</div>
+        <div style="display:flex;flex-direction:column;gap:0">
+          <div style="display:flex;justify-content:space-between;align-items:baseline;padding:5px 0;border-bottom:1px solid #f1f5f9"><span style="font-size:clamp(9px,.8vw,12px);color:#475569">인사평가 연계</span><span style="font-size:clamp(9px,.82vw,12px);font-weight:700;color:#16a34a">인사평가와 분리 ★</span></div>
+          <div style="display:flex;justify-content:space-between;align-items:baseline;padding:5px 0;border-bottom:1px solid #f1f5f9"><span style="font-size:clamp(9px,.8vw,12px);color:#475569">운영 주기</span><span style="font-size:clamp(9px,.82vw,12px);font-weight:700;color:#16a34a">분기 단위</span></div>
+          <div style="display:flex;justify-content:space-between;align-items:baseline;padding:5px 0;border-bottom:1px solid #f1f5f9"><span style="font-size:clamp(9px,.8vw,12px);color:#475569">적정 달성률</span><span style="font-size:clamp(9px,.82vw,12px);font-weight:700;color:#16a34a">60~70% 적절 ★</span></div>
+          <div style="display:flex;justify-content:space-between;align-items:baseline;padding:5px 0;border-bottom:1px solid #f1f5f9"><span style="font-size:clamp(9px,.8vw,12px);color:#475569">도전적 목표</span><span style="font-size:clamp(9px,.82vw,12px);font-weight:700;color:#16a34a">적극적 시도</span></div>
+          <div style="display:flex;justify-content:space-between;align-items:baseline;padding:5px 0"><span style="font-size:clamp(9px,.8vw,12px);color:#475569">목표 공개</span><span style="font-size:clamp(9px,.82vw,12px);font-weight:700;color:#16a34a">조직 내 전체 공개</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="callout-warn" style="margin-top:3%;flex-shrink:0">
+      <p><strong>OKR의 한계</strong> — 리더가 100% 달성을 요구하면 OKR은 또 다른 MBO. <em>"OKR은 훌륭한 조직문화를 대체하지 못한다."</em></p>
+    </div>
+  </div>
+</div>
+
+<!-- ══ S6 자기결정이론 — 연한 파란 배경 ══ -->
+<div class="slide" id="s6" style="background:#f0f5ff">
+  <div class="accent-line"></div>
+  <div class="inner" style="padding-bottom:4%">
+    <div class="topbar">
+      <span class="tb-label">Ⅴ. 자기결정이론과 보상의 역설</span>
+      <div class="tb-line" style="background:#dbe4f5"></div>
+      <span class="tb-right">Deci & Ryan (1985/2000)</span>
+    </div>
+    <div class="hero" style="font-size:clamp(16px,2.4vw,32px);margin-bottom:2%">외부 보상이 내재적 동기를<br>파괴할 수 있다</div>
+    <div class="div-blue"></div>
+    <!-- 소마퍼즐 플로우 -->
+    <div style="display:flex;align-items:center;gap:0;margin-bottom:3%;flex-shrink:0">
+      <div style="flex:1;text-align:center;padding:10px 5px;background:#fff;border-radius:8px;border:1px solid #dbe4f5">
+        <div style="font-size:clamp(9px,.78vw,11px);font-weight:700;color:#1a4fd8;margin-bottom:4%">자발적 행동</div>
+        <div class="caption">내재적 흥미로 참여</div>
+      </div>
+      <div style="font-size:16px;color:#94a3b8;padding:0 8px">→</div>
+      <div style="flex:1;text-align:center;padding:10px 5px;background:#fff;border-radius:8px;border:1px solid #dbe4f5">
+        <div style="font-size:clamp(9px,.78vw,11px);font-weight:700;color:#1a4fd8;margin-bottom:4%">금전 보상 도입</div>
+        <div class="caption">외부 원인 형성</div>
+      </div>
+      <div style="font-size:16px;color:#94a3b8;padding:0 8px">→</div>
+      <div style="flex:1;text-align:center;padding:10px 5px;background:#fff;border-radius:8px;border:1px solid #dbe4f5">
+        <div style="font-size:clamp(9px,.78vw,11px);font-weight:700;color:#64748b;margin-bottom:4%">보상 제거</div>
+        <div class="caption">원인 사라짐</div>
+      </div>
+      <div style="font-size:16px;color:#94a3b8;padding:0 8px">→</div>
+      <div style="flex:1;text-align:center;padding:10px 5px;background:#fef2f2;border-radius:8px;border:1px solid #fecaca">
+        <div style="font-size:clamp(9px,.78vw,11px);font-weight:700;color:#dc2626;margin-bottom:4%">흥미 오히려 감소</div>
+        <div class="caption" style="color:#ef4444">Crowd-out 효과</div>
+      </div>
+    </div>
+    <div class="div-hr" style="background:#dbe4f5"></div>
+    <!-- SDT 3요소 -->
+    <div class="g3" style="flex:1;align-items:start;margin-top:2%">
+      <div>
+        <div style="font-size:clamp(9px,.82vw,11px);font-weight:700;color:#1a4fd8;margin-bottom:2.5%">자율성 (Autonomy)</div>
+        <div class="body" style="color:#334155">내가 스스로 결정한다는 느낌. KPI 강제는 자율성을 침해하여 내재적 동기를 약화시킨다.</div>
+      </div>
+      <div>
+        <div style="font-size:clamp(9px,.82vw,11px);font-weight:700;color:#1a4fd8;margin-bottom:2.5%">유능감 (Competence)</div>
+        <div class="body" style="color:#334155">이 일을 잘 할 수 있다는 믿음. 보상을 '인정의 표현'으로 주면 오히려 유능감이 향상된다.</div>
+      </div>
+      <div>
+        <div style="font-size:clamp(9px,.82vw,11px);font-weight:700;color:#1a4fd8;margin-bottom:2.5%">관계성 (Relatedness)</div>
+        <div class="body" style="color:#334155">타인과 연결되어 있다는 느낌. 개인 KPI 중심 제도는 관계성을 약화시킬 수 있다.</div>
+      </div>
+    </div>
+    <div class="callout" style="margin-top:3%;flex-shrink:0">
+      <p>핵심 — <strong>보상의 방식이 문제.</strong> 통제 수단 → 내재적 동기 소멸. 인정과 감사의 표현 → 유능감 향상.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══ S7 Gaming ══ -->
+<div class="slide" id="s7">
+  <div class="accent-line"></div>
+  <div class="inner" style="padding-bottom:4%">
+    <div class="topbar">
+      <span class="tb-label">Ⅵ. Gaming 현상</span>
+      <div class="tb-line"></div>
+      <span class="tb-right">Aboubichr & Conway (2023)</span>
+    </div>
+    <!-- 핵심 메시지 크게 -->
+    <div style="display:flex;align-items:baseline;gap:16px;margin-bottom:1.5%;flex-shrink:0">
+      <div class="hero" style="font-size:clamp(16px,2.4vw,32px)">지표가 성과를 대체하는 순간</div>
+      <div style="font-size:clamp(14px,2vw,28px);font-weight:900;color:#dc2626">— Gaming 현상</div>
+    </div>
+    <div style="font-size:clamp(12px,1.5vw,20px);font-weight:700;color:#475569;margin-bottom:3%;flex-shrink:0">지표 ↑ &nbsp;&nbsp; 실제 성과 ↓</div>
+    <!-- 5가지 유형: 숫자 진하게 -->
+    <div class="g5" style="flex-shrink:0;margin-bottom:3%">
+      <div>
+        <div style="font-size:clamp(22px,3vw,40px);font-weight:900;color:#dbe4f5;line-height:1">01</div>
+        <div style="font-size:clamp(9px,.9vw,12px);font-weight:700;color:#0f172a;margin:3% 0 2%">낮은 목표 설정</div>
+        <div class="body">확실한 달성만 선택</div>
+      </div>
+      <div>
+        <div style="font-size:clamp(22px,3vw,40px);font-weight:900;color:#dbe4f5;line-height:1">02</div>
+        <div style="font-size:clamp(9px,.9vw,12px);font-weight:700;color:#0f172a;margin:3% 0 2%">성과 비축</div>
+        <div class="body">평가 시기에 공개</div>
+      </div>
+      <div>
+        <div style="font-size:clamp(22px,3vw,40px);font-weight:900;color:#dbe4f5;line-height:1">03</div>
+        <div style="font-size:clamp(9px,.9vw,12px);font-weight:700;color:#0f172a;margin:3% 0 2%">담합</div>
+        <div class="body">공저로 실적 채우기</div>
+      </div>
+      <div>
+        <div style="font-size:clamp(22px,3vw,40px);font-weight:900;color:#dbe4f5;line-height:1">04</div>
+        <div style="font-size:clamp(9px,.9vw,12px);font-weight:700;color:#0f172a;margin:3% 0 2%">안전한 선택</div>
+        <div class="body">혁신 포기</div>
+      </div>
+      <div>
+        <div style="font-size:clamp(22px,3vw,40px);font-weight:900;color:#dbe4f5;line-height:1">05</div>
+        <div style="font-size:clamp(9px,.9vw,12px);font-weight:700;color:#0f172a;margin:3% 0 2%">데이터 조작</div>
+        <div class="body">분류 방식 변경</div>
+      </div>
+    </div>
+    <div class="div-hr"></div>
+    <div class="g2" style="flex:1;align-items:start;margin-top:2%">
+      <div>
+        <div class="label" style="margin-bottom:2%">원인 1. 성과목표 지향성 강화</div>
+        <div class="body" style="color:#334155">KPI = 급여·인사 직결 → '잘하는 척'이 합리적 선택 → 학습목표 지향성 약화</div>
+      </div>
+      <div>
+        <div class="label" style="margin-bottom:2%">원인 2. 심리적 안전감 부재</div>
+        <div class="body" style="color:#334155">실패 = 불이익 → 도전 회피 → Gaming이 가장 합리적인 선택이 됨</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ S8 관리자 역량 ══ -->
+<div class="slide" id="s8" style="background:#f8faff">
+  <div class="accent-line"></div>
+  <div class="inner" style="padding:3% 6% 2.5%">
+    <div class="topbar" style="margin-bottom:2%">
+      <span class="tb-label">Ⅶ. 관리자 역량 재해석</span>
+      <div class="tb-line"></div>
+      <span class="tb-right">조원 실무 경험 + 다섯 문헌 통합</span>
+    </div>
+
+    <!-- ── 상단: 대화창 스타일 ── -->
+    <div style="display:flex;flex-direction:column;gap:3%;flex:1;min-height:0;margin-bottom:2.5%">
+
+      <!-- 1행: 왼쪽 사람, 오른쪽 사람 -->
+      <div style="display:flex;align-items:flex-end;gap:3%">
+
+        <!-- 왼쪽 인물 1 -->
+        <div style="display:flex;align-items:flex-end;gap:8px;flex:1">
+          <svg viewBox="0 0 44 52" width="32" height="38" style="flex-shrink:0">
+            <ellipse cx="22" cy="12" rx="9" ry="9" fill="#93c5fd"/>
+            <path d="M6 50 C6 33 38 33 38 50" fill="#93c5fd"/>
+          </svg>
+          <!-- 말풍선 왼쪽꼬리 -->
+          <div style="position:relative;background:#fff;border:1.5px solid #bfdbfe;border-radius:12px 12px 12px 2px;padding:4% 5%;flex:1">
+            <div style="font-size:clamp(11px,1.1vw,15px);color:#1e3a8a;line-height:1.75;font-weight:500">"목표설정은 효과가 있지만 내가 진짜 하고 싶은 게 아닐 때는 흥미를 상실한다"</div>
+          </div>
+        </div>
+
+        <!-- 오른쪽 인물 2 -->
+        <div style="display:flex;align-items:flex-end;gap:8px;flex:1;flex-direction:row-reverse">
+          <svg viewBox="0 0 44 52" width="32" height="38" style="flex-shrink:0">
+            <ellipse cx="22" cy="12" rx="9" ry="9" fill="#6ea8fe"/>
+            <path d="M6 50 C6 33 38 33 38 50" fill="#6ea8fe"/>
+          </svg>
+          <!-- 말풍선 오른쪽꼬리 -->
+          <div style="position:relative;background:#eff6ff;border:1.5px solid #bfdbfe;border-radius:12px 12px 2px 12px;padding:4% 5%;flex:1">
+            <div style="font-size:clamp(11px,1.1vw,15px);color:#1e3a8a;line-height:1.75;font-weight:500">"성과가 보상과 직결될 때 목표 수준을 낮추고, 올해 달성 가능한 목표도 내년으로 미룬다"</div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- 2행: 왼쪽 사람, 오른쪽 사람 -->
+      <div style="display:flex;align-items:flex-end;gap:3%">
+
+        <!-- 왼쪽 인물 3 -->
+        <div style="display:flex;align-items:flex-end;gap:8px;flex:1">
+          <svg viewBox="0 0 44 52" width="32" height="38" style="flex-shrink:0">
+            <ellipse cx="22" cy="12" rx="9" ry="9" fill="#4b7bec"/>
+            <path d="M6 50 C6 33 38 33 38 50" fill="#4b7bec"/>
+          </svg>
+          <div style="position:relative;background:#fff;border:1.5px solid #bfdbfe;border-radius:12px 12px 12px 2px;padding:4% 5%;flex:1">
+            <div style="font-size:clamp(11px,1.1vw,15px);color:#1e3a8a;line-height:1.75;font-weight:500">"인센티브가 건수와 연동될 때 개수를 채우기 위한 허위 달성·결과 조작이 발생한다"</div>
+          </div>
+        </div>
+
+        <!-- 오른쪽 인물 4 -->
+        <div style="display:flex;align-items:flex-end;gap:8px;flex:1;flex-direction:row-reverse">
+          <svg viewBox="0 0 44 52" width="32" height="38" style="flex-shrink:0">
+            <ellipse cx="22" cy="12" rx="9" ry="9" fill="#4ade80"/>
+            <path d="M6 50 C6 33 38 33 38 50" fill="#4ade80"/>
+          </svg>
+          <div style="position:relative;background:#f0fdf4;border:1.5px solid #86efac;border-radius:12px 12px 2px 12px;padding:4% 5%;flex:1">
+            <div style="font-size:clamp(11px,1.1vw,15px);color:#166534;line-height:1.75;font-weight:500">"목표 Cascading이 잘 될 경우 만족도가 상승하고 목표 달성 의지가 높아진다"</div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- 3행: 왼쪽 사람, 오른쪽 사람 -->
+      <div style="display:flex;align-items:flex-end;gap:3%">
+
+        <!-- 왼쪽 인물 5 -->
+        <div style="display:flex;align-items:flex-end;gap:8px;flex:1">
+          <svg viewBox="0 0 44 52" width="32" height="38" style="flex-shrink:0">
+            <ellipse cx="22" cy="12" rx="9" ry="9" fill="#a78bfa"/>
+            <path d="M6 50 C6 33 38 33 38 50" fill="#a78bfa"/>
+          </svg>
+          <div style="position:relative;background:#fff;border:1.5px solid #ddd6fe;border-radius:12px 12px 12px 2px;padding:4% 5%;flex:1">
+            <div style="font-size:clamp(11px,1.1vw,15px);color:#4c1d95;line-height:1.75;font-weight:500">"각 조직의 리더들이 구성원들에게 얼마나 목표에 대한 동기부여를 주는지가 중요한 것 같다"</div>
+          </div>
+        </div>
+
+        <!-- 오른쪽 인물 6 -->
+        <div style="display:flex;align-items:flex-end;gap:8px;flex:1;flex-direction:row-reverse">
+          <svg viewBox="0 0 44 52" width="32" height="38" style="flex-shrink:0">
+            <ellipse cx="22" cy="12" rx="9" ry="9" fill="#fb923c"/>
+            <path d="M6 50 C6 33 38 33 38 50" fill="#fb923c"/>
+          </svg>
+          <div style="position:relative;background:#fff7ed;border:1.5px solid #fed7aa;border-radius:12px 12px 2px 12px;padding:4% 5%;flex:1">
+            <div style="font-size:clamp(11px,1.1vw,15px);color:#7c2d12;line-height:1.75;font-weight:500">"영업 조직의 경우 목표는 숫자로 내려오지만, 그 목표를 달성하기 위한 동기부여가 반드시 필요하다"</div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- 구분선 -->
+    <div style="height:1px;background:#e2e8f0;margin-bottom:2%;flex-shrink:0"></div>
+
+    <!-- ── 하단: 관리자 역량 4개 가로 ── -->
+    <div style="flex-shrink:0">
+      <div style="font-size:clamp(10px,.95vw,13px);font-weight:700;color:#475569;margin-bottom:2%;text-align:center">
+        성패는 기법 선택이 아니라 — <strong style="color:#0f172a">관리자가 어떻게 이끄느냐</strong>에 달려 있다
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:2%">
+
+        <div style="background:#fff;border-radius:10px;border:1px solid #dbe4f5;border-top:4px solid #1a4fd8;padding:4% 5%">
+          <div style="font-size:clamp(12px,1.15vw,16px);font-weight:700;color:#1a4fd8;margin-bottom:3%">🗣 피드백 역량</div>
+          <div style="font-size:clamp(10px,.95vw,13px);color:#334155;line-height:1.7">'어떻게 주느냐'가 핵심.<br>자아 향한 피드백은 성과를 낮춘다.</div>
+          <div style="font-size:clamp(8px,.72vw,10px);color:#94a3b8;margin-top:4%">Kluger & DeNisi (1996)</div>
+        </div>
+
+        <div style="background:#fff;border-radius:10px;border:1px solid #dbe4f5;border-top:4px solid #1a4fd8;padding:4% 5%">
+          <div style="font-size:clamp(12px,1.15vw,16px);font-weight:700;color:#1a4fd8;margin-bottom:3%">🔥 동기부여 역량</div>
+          <div style="font-size:clamp(10px,.95vw,13px);color:#334155;line-height:1.7">보상을 인정·감사로 전달.<br>자율성과 의미를 부여한다.</div>
+          <div style="font-size:clamp(8px,.72vw,10px);color:#94a3b8;margin-top:4%">Deci & Ryan / MBO 연구</div>
+        </div>
+
+        <div style="background:#fff;border-radius:10px;border:1px solid #dbe4f5;border-top:4px solid #1a4fd8;padding:4% 5%">
+          <div style="font-size:clamp(12px,1.15vw,16px);font-weight:700;color:#1a4fd8;margin-bottom:3%">📐 성과 측정 역량</div>
+          <div style="font-size:clamp(10px,.95vw,13px);color:#334155;line-height:1.7">무엇을 어떻게 측정할지 설계.<br>잘못된 지표는 Gaming을 낳는다.</div>
+          <div style="font-size:clamp(8px,.72vw,10px);color:#94a3b8;margin-top:4%">Gaming 연구 / Goodhart</div>
+        </div>
+
+        <div style="background:#fff;border-radius:10px;border:1px solid #dbe4f5;border-top:4px solid #1a4fd8;padding:4% 5%">
+          <div style="font-size:clamp(12px,1.15vw,16px);font-weight:700;color:#1a4fd8;margin-bottom:3%">⛽ 자원 지원 역량</div>
+          <div style="font-size:clamp(10px,.95vw,13px);color:#334155;line-height:1.7">도전 목표 + 자원 지원은 불가분.<br>자원 없이 요구만 높이면 소진.</div>
+          <div style="font-size:clamp(8px,.72vw,10px);color:#94a3b8;margin-top:4%">JD-R / Bakker & Demerouti</div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══ S9 통합 프레임워크 ══ -->
+<div class="slide" id="s9">
+  <div class="accent-line"></div>
+  <div class="inner" style="padding-bottom:4%">
+    <div class="topbar">
+      <span class="tb-label">Ⅷ. 결론 및 제언</span>
+      <div class="tb-line"></div>
+      <span class="tb-right">CMBA 4조</span>
+    </div>
+    <div class="hero" style="font-size:clamp(14px,1.9vw,26px);margin-bottom:2%">목표 설정부터 성과 창출까지,<br>관리자의 역량<span style="color:#1a4fd8">(피드백 · 동기부여 · 성과측정 · 자원지원)</span>이 매개로 작동한다</div>
+    <div class="div-blue"></div>
+    <!-- 플로우: 도형 화살표 형태 -->
+    <div style="display:flex;align-items:stretch;gap:0;margin-bottom:2.5%;flex-shrink:0">
+
+      <!-- 단계 1 -->
+      <div style="flex:1;position:relative;background:#1a4fd8;clip-path:polygon(0 0,calc(100% - 18px) 0,100% 50%,calc(100% - 18px) 100%,0 100%);padding:3.5% 5% 3.5% 4%;display:flex;flex-direction:column;justify-content:center">
+        <div style="font-size:clamp(7px,.62vw,9px);font-weight:700;color:rgba(255,255,255,.6);letter-spacing:.5px;text-transform:uppercase;margin-bottom:5%">목표 설정</div>
+        <div style="font-size:clamp(11px,1.2vw,16px);font-weight:700;color:#fff;line-height:1.25;margin-bottom:5%">목표설정이론</div>
+        <div style="font-size:clamp(8px,.7vw,10px);color:rgba(255,255,255,.7)">Locke & Latham (2002)</div>
+      </div>
+
+      <!-- 단계 2 -->
+      <div style="flex:1;position:relative;background:#2558e0;clip-path:polygon(18px 0,calc(100% - 18px) 0,100% 50%,calc(100% - 18px) 100%,18px 100%,36px 50%);padding:3.5% 5% 3.5% 8%;display:flex;flex-direction:column;justify-content:center;margin-left:-2px">
+        <div style="font-size:clamp(7px,.62vw,9px);font-weight:700;color:rgba(255,255,255,.6);letter-spacing:.5px;text-transform:uppercase;margin-bottom:5%">목표 몰입</div>
+        <div style="font-size:clamp(11px,1.2vw,16px);font-weight:700;color:#fff;line-height:1.25;margin-bottom:5%">MBO · OKR</div>
+        <div style="font-size:clamp(8px,.7vw,10px);color:rgba(255,255,255,.7)">Cascading 구조</div>
+      </div>
+
+      <!-- 단계 3 -->
+      <div style="flex:1;position:relative;background:#3b6de8;clip-path:polygon(18px 0,calc(100% - 18px) 0,100% 50%,calc(100% - 18px) 100%,18px 100%,36px 50%);padding:3.5% 5% 3.5% 8%;display:flex;flex-direction:column;justify-content:center;margin-left:-2px">
+        <div style="font-size:clamp(7px,.62vw,9px);font-weight:700;color:rgba(255,255,255,.6);letter-spacing:.5px;text-transform:uppercase;margin-bottom:5%">동기 유지</div>
+        <div style="font-size:clamp(11px,1.2vw,16px);font-weight:700;color:#fff;line-height:1.25;margin-bottom:5%">자기결정이론</div>
+        <div style="font-size:clamp(8px,.7vw,10px);color:rgba(255,255,255,.7)">내재적 동기 보존</div>
+      </div>
+
+      <!-- 단계 4 -->
+      <div style="flex:1;position:relative;background:#4b7bec;clip-path:polygon(18px 0,100% 0,100% 100%,18px 100%,36px 50%);padding:3.5% 5% 3.5% 8%;display:flex;flex-direction:column;justify-content:center;margin-left:-2px">
+        <div style="font-size:clamp(7px,.62vw,9px);font-weight:700;color:rgba(255,255,255,.6);letter-spacing:.5px;text-transform:uppercase;margin-bottom:5%">성과 창출</div>
+        <div style="font-size:clamp(11px,1.2vw,16px);font-weight:700;color:#fff;line-height:1.25;margin-bottom:5%">실질적 성과</div>
+        <div style="font-size:clamp(8px,.7vw,10px);color:rgba(255,255,255,.7)">Gaming 방지</div>
+      </div>
+
+    </div>
+    <div style="text-align:center;font-size:clamp(7px,.65vw,9.5px);color:#94a3b8;margin-bottom:2%;font-style:italic">↑ 각 단계는 관리자 역량(피드백 · 동기부여 · 성과측정 · 자원지원)을 매개로 작동</div>
+    <div class="div-hr" style="margin-top:2%"></div>
+    <!-- 제언 3개 -->
+    <div class="g3" style="flex-shrink:0;margin-top:2%">
+      <div style="display:flex;gap:8px;align-items:flex-start">
+        <div style="font-size:clamp(18px,2.2vw,30px);font-weight:900;color:#dbe4f5;line-height:1;flex-shrink:0">01</div>
+        <div>
+          <div class="h2" style="font-size:clamp(10px,1vw,13px);margin-bottom:2%;color:#0f172a">목표 설계의 문화 적합성</div>
+          <div class="body" style="color:#475569">MBO·OKR·KPI를 조직의 업무 특성과 문화에 맞게 설계해야 한다.</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;align-items:flex-start">
+        <div style="font-size:clamp(18px,2.2vw,30px);font-weight:900;color:#dbe4f5;line-height:1;flex-shrink:0">02</div>
+        <div>
+          <div class="h2" style="font-size:clamp(10px,1vw,13px);margin-bottom:2%;color:#0f172a">보상 방식 재설계</div>
+          <div class="body" style="color:#475569">외재적 보상이 내재적 동기를 훼손하지 않도록 '감사의 표시'로 기능하게 해야 한다.</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;align-items:flex-start">
+        <div style="font-size:clamp(18px,2.2vw,30px);font-weight:900;color:#dbe4f5;line-height:1;flex-shrink:0">03</div>
+        <div>
+          <div class="h2" style="font-size:clamp(10px,1vw,13px);margin-bottom:2%;color:#0f172a">심리적 안전감 문화 구축</div>
+          <div class="body" style="color:#475569">실패를 용납하는 학습 지향 문화 없이 목표관리는 Gaming으로 귀결된다.</div>
+        </div>
+      </div>
+    </div>
+    <!-- 결론 callout -->
+    <div class="callout" style="flex-shrink:0;margin-top:2%">
+      <p style="font-size:clamp(9px,.88vw,12px)"><strong>효과적인 목표관리는 숫자를 설정하는 과정이 아니라, 구성원이 목표에 의미를 부여하고 자발적으로 몰입할 수 있도록 만드는 과정이어야 한다.</strong></p>
+    </div>
+  </div>
+</div>
+
+<!-- ══ S10 감사합니다 ══ -->
+<div class="slide" id="s10">
+  <div class="accent-line"></div>
+  <!-- 왼쪽 파란 사이드바 -->
+  <div style="position:absolute;left:0;top:0;bottom:0;width:5px;background:linear-gradient(180deg,#1a4fd8 0%,#4b7bec 100%)"></div>
+  <div class="inner" style="justify-content:center;align-items:center;text-align:center">
+    <div class="label" style="text-align:center;margin-bottom:3%">연세대학교 경영전문대학원 CMBA 105기 3반 4조</div>
+    <div style="font-size:clamp(36px,6vw,80px);font-weight:900;color:#0f172a;letter-spacing:-2px;line-height:1;margin-bottom:3%">감사합니다</div>
+    <div style="width:60px;height:3px;background:#1a4fd8;margin:0 auto 3%"></div>
+    <div class="body" style="font-size:clamp(14px,1.4vw,20px);color:#1a4fd8;font-weight:700;margin:0 auto;letter-spacing:.5px">조직행동론</div>
+    <div style="position:absolute;bottom:5%;left:0;right:0;text-align:center;font-size:clamp(8px,.7vw,10px);color:#cbd5e1">2026.06.11</div>
+  </div>
+</div>
+
+</div><!-- /slide-area -->
+
+<!-- 네비 -->
+<div class="nav">
+  <button class="nbtn" id="prev" onclick="go(-1)" disabled>← 이전</button>
+  <div class="dots" id="dots"></div>
+  <span class="cnt" id="counter">1 / 10</span>
+  <button class="nbtn" id="next" onclick="go(1)">다음 →</button>
+</div>
+</div><!-- /stage -->
+
+<script>
+const total=10;let cur=1;
+const dotsEl=document.getElementById('dots');
+for(let i=1;i<=total;i++){
+  const d=document.createElement('button');
+  d.className='dot'+(i===1?' on':'');
+  d.setAttribute('aria-label',i+'번');
+  d.onclick=()=>goTo(i);
+  dotsEl.appendChild(d);
+}
+function goTo(n){
+  document.getElementById('s'+cur).classList.remove('on');
+  dotsEl.children[cur-1].classList.remove('on');
+  // S4 리셋
+  if(n===4 && window._s4) window._s4.reset();
+  cur=n;
+  document.getElementById('s'+cur).classList.add('on');
+  dotsEl.children[cur-1].classList.add('on');
+  document.getElementById('counter').textContent=cur+' / '+total;
+  document.getElementById('prev').disabled=cur===1;
+  document.getElementById('next').disabled=cur===total;
+}
+function go(d){if(cur+d>=1&&cur+d<=total)goTo(cur+d);}
+document.addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight'||e.key==='ArrowDown'){
+    // S4 애니메이션 처리
+    if(cur===4 && window._s4 && !window._s4.done()){
+      window._s4.showNext();
+    } else {
+      go(1);
+    }
+  }
+  if(e.key==='ArrowLeft'||e.key==='ArrowUp') go(-1);
+});
+function toggleFS(){
+  if(!document.fullscreenElement){
+    document.documentElement.requestFullscreen();
+    document.getElementById('fsbtn').textContent='✕ 전체화면 종료';
+  }else{
+    document.exitFullscreen();
+    document.getElementById('fsbtn').textContent='⛶ 전체화면';
+  }
+}
+document.addEventListener('fullscreenchange',()=>{
+  if(!document.fullscreenElement) document.getElementById('fsbtn').textContent='⛶ 전체화면';
+});
+</script>
+</body>
+</html>
